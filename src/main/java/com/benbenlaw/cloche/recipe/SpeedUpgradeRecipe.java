@@ -32,25 +32,24 @@ public record SpeedUpgradeRecipe(Ingredient ingredient, String modifierType, int
     }
 
     @Override
-    public boolean canCraftInDimensions(int p_43999_, int p_44000_) {
-        return true;
-    }
-
-    @Override
-    public ItemStack getResultItem(HolderLookup.Provider p_336125_) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<? extends Recipe<RecipeInput>> getSerializer() {
         return SpeedUpgradeRecipe.Serializer.INSTANCE;
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public RecipeType<? extends Recipe<RecipeInput>> getType() {
         return SpeedUpgradeRecipe.Type.INSTANCE;
     }
 
+    @Override
+    public @NotNull PlacementInfo placementInfo() {
+        return PlacementInfo.create(ingredient);
+    }
+
+    @Override
+    public @NotNull RecipeBookCategory recipeBookCategory() {
+        return RecipeBookCategories.CRAFTING_MISC;
+    }
     public static class Type implements RecipeType<SpeedUpgradeRecipe> {
         private Type() {}
         public static final SpeedUpgradeRecipe.Type INSTANCE = new SpeedUpgradeRecipe.Type();

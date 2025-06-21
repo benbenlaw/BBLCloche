@@ -3,7 +3,6 @@ package com.benbenlaw.cloche.screen;
 import com.benbenlaw.cloche.Cloche;
 import com.benbenlaw.cloche.block.ClocheBlock;
 import com.benbenlaw.cloche.networking.OnOffButtonPayload;
-import com.benbenlaw.cloche.util.ClocheTags;
 import com.benbenlaw.core.screen.util.CoreButtons;
 import com.benbenlaw.core.screen.util.TooltipArea;
 import com.benbenlaw.core.util.MouseUtil;
@@ -12,9 +11,13 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
@@ -50,24 +53,21 @@ public class ClocheScreen extends AbstractContainerScreen<ClocheMenu> {
     }
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float pPartialTick, int mouseX, int mouseY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, TEXTURE);
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
 
-        guiGraphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, x, y, 0, 0, imageWidth, imageHeight, 256, 256);
 
         if (!menu.blockEntity.errorMessage.isEmpty()) {
-            guiGraphics.blit(TEXTURE,x + 21, y - 17, 177, 17, 20, 18);
+            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE,x + 21, y - 17, 177, 17, 20, 18, 256, 256);
             renderErrorTooltip(guiGraphics, mouseX, mouseY, x, y);
         }
         if (menu.blockEntity.errorMessage.isEmpty()){
-            guiGraphics.blit(TEXTURE, x + 21, y - 17, 177, 35, 20, 18);
+            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, x + 21, y - 17, 177, 35, 20, 18, 256, 256);
             renderTickRate(guiGraphics, mouseX, mouseY, x, y);
         }
         if (menu.isCrafting()) {
-            guiGraphics.blit(TEXTURE, x + 49, y + 25, 176, 0, menu.getScaledProgress(), 16);
+            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, x + 49, y + 25, 176, 0, menu.getScaledProgress(), 16, 256, 256);
         }
     }
 
@@ -80,7 +80,6 @@ public class ClocheScreen extends AbstractContainerScreen<ClocheMenu> {
         renderTooltip(guiGraphics, mouseX, mouseY);
         renderSlotTooltips(guiGraphics, mouseX, mouseY, x, y);
     }
-
     private void renderSlotTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY, int x, int y) {
         List<TooltipArea> tooltipAreas = new ArrayList<>();
 
@@ -90,39 +89,56 @@ public class ClocheScreen extends AbstractContainerScreen<ClocheMenu> {
         tooltipAreas.add(new TooltipArea(53, 53, 16, 16, "block.cloche.gui.upgrade_slot"));
         tooltipAreas.add(new TooltipArea(71, 53, 16, 16, "block.cloche.gui.upgrade_slot"));
 
-
+        // Conditional catalyst slot tooltip
         if (menu.numberOfCatalysts == 0) {
             tooltipAreas.add(new TooltipArea(8, 53, 16, 16, "block.cloche.gui.catalyst_slot_no_catalysts"));
         } else {
             tooltipAreas.add(new TooltipArea(8, 53, 16, 16, "block.cloche.gui.catalyst_slot"));
-
         }
 
+        // Render tooltip if mouse is hovering over area and slot is valid for tooltip display
         for (TooltipArea area : tooltipAreas) {
             if (MouseUtil.isMouseAboveArea(mouseX, mouseY, x, y, area.offsetX, area.offsetY, area.width, area.height)) {
                 if (this.menu.getCarried().isEmpty() && this.hoveredSlot != null && !this.hoveredSlot.hasItem()) {
-                    guiGraphics.renderTooltip(this.font, Component.translatable(area.translationKey), mouseX, mouseY);
+                    Component text = Component.translatable(area.translationKey);
+                    FormattedCharSequence sequence = text.getVisualOrderText();
+
+                    List<ClientTooltipComponent> tooltipLines = List.of(ClientTooltipComponent.create(sequence));
+
+                    guiGraphics.renderTooltip(this.font, tooltipLines, mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, null );
                 }
             }
         }
 
+        // Render tooltip for on/off button (if you re-enable it)
         if (MouseUtil.isMouseAboveArea(mouseX, mouseY, x, y, 0, -17, 19, 18)) {
-            guiGraphics.renderTooltip(this.font, Component.translatable("block.cloche.gui.on_off"), mouseX, mouseY);
+            Component text = Component.translatable("block.cloche.gui.on_off");
+            FormattedCharSequence sequence = text.getVisualOrderText();
+            List<ClientTooltipComponent> tooltipLines = List.of(ClientTooltipComponent.create(sequence));
+            guiGraphics.renderTooltip(this.font, tooltipLines, mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, null);
         }
-
     }
 
     @Nullable
     private void renderTickRate(GuiGraphics guiGraphics, int mouseX, int mouseY, int x, int y) {
         if (MouseUtil.isMouseAboveArea(mouseX, mouseY, x, y, 20, -17, 19, 18)) {
-            guiGraphics.renderTooltip(this.font, Component.literal(this.menu.getProgress() + "/" +
-                    this.menu.getMaxProgress()), mouseX, mouseY);
+            Component text = Component.literal(this.menu.getProgress() + "/" + this.menu.getMaxProgress());
+            FormattedCharSequence sequence = text.getVisualOrderText();
+            List<ClientTooltipComponent> tooltipLines = List.of(ClientTooltipComponent.create(sequence));
+
+            guiGraphics.renderTooltip(this.font, tooltipLines, mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, null
+            );
         }
     }
 
     private void renderErrorTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY, int x, int y) {
         if (MouseUtil.isMouseAboveArea(mouseX, mouseY, x, y, 20, -17, 19, 18)) {
-            guiGraphics.renderTooltip(this.font, Component.translatable(this.menu.blockEntity.errorMessage), mouseX, mouseY);
+            Component text = Component.translatable(this.menu.blockEntity.errorMessage);
+            FormattedCharSequence sequence = text.getVisualOrderText();
+            List<ClientTooltipComponent> tooltipLines = List.of(ClientTooltipComponent.create(sequence));
+
+            guiGraphics.renderTooltip(this.font, tooltipLines, mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, null
+            );
         }
     }
 

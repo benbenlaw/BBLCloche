@@ -1,5 +1,9 @@
 Changelog BBL Cloche
 
+1.4.0
+Updated to minecraft 1.21.6
+Disabled JEI support for cloche until JEI is updated to 1.21.6
+
 1.3.2
 Increase cloche performance by reducing the number of sync calls significantly
 Updated some texture thanks @Yuki

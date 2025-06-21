@@ -1,6 +1,5 @@
 {
   "type": "cloche:cloche",
-  "catalyst": [],
   "dimension": "minecraft:the_nether",
   "duration": 1200,
   "results": [
@@ -32,10 +31,6 @@
       }
     }
   ],
-  "seed": {
-    "item": "minecraft:warped_fungus"
-  },
-  "soil": {
-    "tag": "minecraft:dirt"
-  }
+  "seed": "minecraft:warped_fungus",
+  "soil": "#minecraft:dirt"
 }

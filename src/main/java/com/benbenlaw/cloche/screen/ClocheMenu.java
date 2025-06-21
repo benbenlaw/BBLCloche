@@ -2,29 +2,32 @@ package com.benbenlaw.cloche.screen;
 
 import com.benbenlaw.cloche.block.ClocheBlocks;
 import com.benbenlaw.cloche.block.entity.ClocheBlockEntity;
+import com.benbenlaw.cloche.recipe.ClocheRecipe;
 import com.benbenlaw.cloche.recipe.ClocheRecipes;
+import com.benbenlaw.cloche.recipe.SpeedUpgradeRecipe;
+import com.benbenlaw.cloche.util.ClientClocheRecipeCache;
 import com.benbenlaw.cloche.util.ClocheTags;
 import com.benbenlaw.core.screen.util.CoreSlotTextures;
 import com.benbenlaw.core.screen.util.slot.CoreSlot;
 import com.benbenlaw.core.screen.util.slot.ResultSlot;
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.multiplayer.ClientRecipeContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeAccess;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.benbenlaw.cloche.block.entity.ClocheBlockEntity.*;
 
@@ -58,8 +61,8 @@ public class ClocheMenu extends AbstractContainerMenu {
 
         this.addSlot(new CoreSlot(entity.getItemStackHandler(), SEED_SLOT, 8, 17) {
             @Override
-            public @NotNull Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
-                return Pair.of(InventoryMenu.BLOCK_ATLAS, CoreSlotTextures.SEED_SLOT);
+            public ResourceLocation getNoItemIcon() {
+                return CoreSlotTextures.SEED_SLOT;
             }
             @Override
             public boolean mayPlace(ItemStack stack) {
@@ -69,8 +72,8 @@ public class ClocheMenu extends AbstractContainerMenu {
 
         this.addSlot(new CoreSlot(entity.getItemStackHandler(), SOIL_SLOT, 8, 35) {
             @Override
-            public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
-                return Pair.of(InventoryMenu.BLOCK_ATLAS, CoreSlotTextures.BLOCK_SLOT);
+            public ResourceLocation getNoItemIcon() {
+                return CoreSlotTextures.BLOCK_SLOT;
             }
             @Override
             public boolean mayPlace(ItemStack stack) {
@@ -79,8 +82,8 @@ public class ClocheMenu extends AbstractContainerMenu {
         });
         this.addSlot(new CoreSlot(entity.getItemStackHandler(), CATALYST_SLOT, 8, 53) {
             @Override
-            public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
-                return Pair.of(InventoryMenu.BLOCK_ATLAS, CoreSlotTextures.CATALYST_SLOT);
+            public ResourceLocation getNoItemIcon() {
+                return CoreSlotTextures.CATALYST_SLOT;
             }
             @Override
             public boolean mayPlace(ItemStack stack) {
@@ -90,8 +93,8 @@ public class ClocheMenu extends AbstractContainerMenu {
 
         this.addSlot(new CoreSlot(entity.getItemStackHandler(), UPGRADE_SLOT_1, 35, 53) {
             @Override
-            public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
-                return Pair.of(InventoryMenu.BLOCK_ATLAS, CoreSlotTextures.UPGRADE_SLOT);
+            public ResourceLocation getNoItemIcon() {
+                return CoreSlotTextures.UPGRADE_SLOT;
             }
             @Override
             public boolean mayPlace(ItemStack stack) {
@@ -101,8 +104,8 @@ public class ClocheMenu extends AbstractContainerMenu {
 
         this.addSlot(new CoreSlot(entity.getItemStackHandler(), UPGRADE_SLOT_2, 53, 53) {
             @Override
-            public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
-                return Pair.of(InventoryMenu.BLOCK_ATLAS, CoreSlotTextures.UPGRADE_SLOT);
+            public ResourceLocation getNoItemIcon() {
+                return CoreSlotTextures.UPGRADE_SLOT;
             }
             @Override
             public boolean mayPlace(ItemStack stack) {
@@ -112,8 +115,8 @@ public class ClocheMenu extends AbstractContainerMenu {
 
         this.addSlot(new CoreSlot(entity.getItemStackHandler(), UPGRADE_SLOT_3, 71, 53) {
             @Override
-            public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
-                return Pair.of(InventoryMenu.BLOCK_ATLAS, CoreSlotTextures.UPGRADE_SLOT);
+            public ResourceLocation getNoItemIcon() {
+                return CoreSlotTextures.UPGRADE_SLOT;
             }
             @Override
             public boolean mayPlace(ItemStack stack) {
@@ -167,11 +170,11 @@ public class ClocheMenu extends AbstractContainerMenu {
         List<Ingredient> seedOptions = new ArrayList<>();
         List<Ingredient> catalystOptions = new ArrayList<>();
 
-        level.getRecipeManager().getAllRecipesFor(ClocheRecipes.CLOCHE_TYPE.get()).forEach(recipe -> {
-            soilOptions.add(recipe.value().getSoil());
-            seedOptions.add(recipe.value().getSeed());
-            catalystOptions.add(recipe.value().getCatalyst());
-        });
+        for (ClocheRecipe recipe : ClientClocheRecipeCache.getRecipes()) {
+            soilOptions.add(recipe.getSoil());
+            seedOptions.add(recipe.getSeed());
+            recipe.getCatalyst().ifPresent(catalystOptions::add);
+        }
 
         numberOfCatalysts = catalystOptions.size();
 

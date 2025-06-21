@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "cloche",
   "key": {
-    "P": {
-      "item": "minecraft:purpur_block"
-    },
-    "U": {
-      "item": "bblcore:upgrade_base"
-    }
+    "P": "minecraft:purpur_block",
+    "U": "bblcore:upgrade_base"
   },
   "pattern": [
     " P ",

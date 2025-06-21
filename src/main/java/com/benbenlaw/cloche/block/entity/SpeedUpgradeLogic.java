@@ -1,24 +1,24 @@
 package com.benbenlaw.cloche.block.entity;
 
-import com.benbenlaw.cloche.recipe.ClocheRecipe;
-import com.benbenlaw.cloche.recipe.DimensionalUpgradeRecipe;
 import com.benbenlaw.cloche.recipe.SpeedUpgradeRecipe;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.items.ItemStackHandler;
-import org.jetbrains.annotations.NotNull;
 
-import javax.swing.plaf.basic.BasicComboBoxUI;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
 
 public class SpeedUpgradeLogic {
 
     public int getNewDuration(int recipeStartAmount, ItemStackHandler itemHandler, Level level) {
 
-        List<RecipeHolder<SpeedUpgradeRecipe>> speedRecipe = level.getRecipeManager()
-                .getAllRecipesFor(SpeedUpgradeRecipe.Type.INSTANCE);
+        RecipeManager recipeManager = (RecipeManager) level.recipeAccess();
+
+        List<RecipeHolder<?>> speedRecipe = recipeManager.getRecipes().stream().filter(
+                recipeHolder -> recipeHolder.value() instanceof SpeedUpgradeRecipe
+                ).toList();
 
         double adjustedDuration = recipeStartAmount;
 
@@ -34,8 +34,8 @@ public class SpeedUpgradeLogic {
         for (ItemStack upgradeSlot : upgradeSlots) {
             if (upgradeSlot.isEmpty()) continue;
 
-            for (RecipeHolder<SpeedUpgradeRecipe> recipeHolder : speedRecipe) {
-                SpeedUpgradeRecipe speedUpgradeRecipe = recipeHolder.value();
+            for (RecipeHolder<?> recipeHolder : speedRecipe) {
+                SpeedUpgradeRecipe speedUpgradeRecipe = (SpeedUpgradeRecipe) recipeHolder.value();
 
                 if (speedUpgradeRecipe.ingredient().test(upgradeSlot)) {
                     String modifierType = speedUpgradeRecipe.modifierType();

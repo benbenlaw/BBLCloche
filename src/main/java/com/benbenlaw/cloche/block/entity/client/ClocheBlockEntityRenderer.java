@@ -1,37 +1,20 @@
 package com.benbenlaw.cloche.block.entity.client;
 
 import com.benbenlaw.cloche.block.entity.ClocheBlockEntity;
-import com.benbenlaw.core.block.brightable.BrightBlock;
-import com.benbenlaw.core.block.brightable.BrightSapling;
-import com.benbenlaw.core.block.colored.ColoredBlock;
-import com.benbenlaw.core.block.colored.util.ColorMap;
-import com.benbenlaw.core.block.colored.util.IColored;
-import com.benbenlaw.core.config.ColorTintIndexConfig;
-import com.benbenlaw.core.item.CoreDataComponents;
-import com.benbenlaw.core.util.ColorHandler;
-import com.benbenlaw.core.util.CoreTags;
 import com.benbenlaw.core.util.RenderUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.item.*;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.StemBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -40,15 +23,8 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.client.model.data.ModelData;
-import net.neoforged.neoforge.fluids.FluidType;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
-
-import java.util.List;
 
 public class ClocheBlockEntityRenderer implements BlockEntityRenderer<ClocheBlockEntity> {
     public ClocheBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
@@ -56,187 +32,85 @@ public class ClocheBlockEntityRenderer implements BlockEntityRenderer<ClocheBloc
     }
 
     @Override
-    public void render(ClocheBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack,
-                       MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
+    public void render(ClocheBlockEntity blockEntity, float partialTick, PoseStack poseStack,
+                       MultiBufferSource bufferSource, int packedLight, int packedOverlay, Vec3 cameraOffset) {
 
-        ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-        BlockRenderDispatcher blockRenderDispatcher = Minecraft.getInstance().getBlockRenderer();
-        ItemStack soilStack = pBlockEntity.getSoil();
-        ItemStack seedStack = pBlockEntity.getSeed();
+        BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
+        ItemStack soilStack = blockEntity.getSoil();
+        ItemStack seedStack = blockEntity.getSeed();
 
-        BlockState soilAsBlock;
-
-
+        // SOIL RENDERING
         if (soilStack.getItem() instanceof BlockItem blockItem) {
-            soilAsBlock = blockItem.getBlock().defaultBlockState();
+            BlockState soilBlockState = blockItem.getBlock().defaultBlockState();
 
-            BakedModel model = Minecraft.getInstance().getBlockRenderer().getBlockModel(soilAsBlock);
-            RandomSource consistentRandom = RandomSource.create(pBlockEntity.getBlockPos().getX());
-            List<BakedQuad> topOfBlock = model.getQuads(soilAsBlock, Direction.UP, consistentRandom , ModelData.builder().build() , RenderType.solid());
+            poseStack.pushPose();
+            poseStack.scale(0.9f, 0.9f, 0.9f);
+            poseStack.translate(0.05f, -0.92f, 0.05f);
 
-            VertexConsumer buffer = pBufferSource.getBuffer(RenderType.solid());
+            blockRenderer.renderSingleBlock(
+                    soilBlockState,
+                    poseStack,
+                    bufferSource,
+                    packedLight,
+                    packedOverlay
+            );
 
-            pPoseStack.pushPose();
-
-            pPoseStack.scale(0.9f, 0.9f, 0.9f);
-            pPoseStack.translate(0.05f,  -0.92f, 0.05f);
-
-            int tintColor = 0xFFFFFF;
-
-            if (blockItem.getBlock() instanceof BrightBlock) {
-
-                ItemStack stack = pBlockEntity.getSoil();
-
-                for (String colorTag : CoreTags.Blocks.COLOR_TAGS.keySet()) {
-                    if (stack.is(CoreTags.Items.COLOR_TAGS.get(colorTag))) {
-                        DyeColor dyeColor = DyeColor.valueOf(colorTag.toUpperCase());
-                        tintColor = ColorMap.getColorValue(dyeColor);
-
-                    }
-                }
-            }
-
-            float red = (tintColor >> 16 & 0xFF) / 255.0F;
-            float green = (tintColor >> 8 & 0xFF) / 255.0F;
-            float blue = (tintColor & 0xFF) / 255.0F;
-
-            for (BakedQuad quad : topOfBlock) {
-                buffer.putBulkData(pPoseStack.last(), quad, red, green, blue, 1.0f, pPackedLight, pPackedOverlay);
-            }
-
-            pPoseStack.popPose();  // Restore the PoseStack to the saved state
+            poseStack.popPose();
         }
 
+        // LIQUID SOIL (like from buckets)
         if (soilStack.getItem() instanceof BucketItem bucketItem) {
-
             Fluid fluid = bucketItem.content.defaultFluidState().getType();
-            VertexConsumer buffer = pBufferSource.getBuffer(Sheets.translucentCullBlockSheet());
-
-            renderFluid(pPoseStack.last(), buffer, pBlockEntity, fluid, 0.05F, pPackedLight);
-
+            VertexConsumer buffer = bufferSource.getBuffer(Sheets.translucentItemSheet());
+            renderFluid(poseStack.last(), buffer, blockEntity, fluid, 0.05F, packedLight);
         }
 
-
-        BlockState seedAsBlock;
-        int progress = pBlockEntity.progress;
-        int maxProgress = pBlockEntity.maxProgress;
-
+        // SEED RENDERING
         if (seedStack.getItem() instanceof BlockItem blockItem) {
-            seedAsBlock = blockItem.getBlock().defaultBlockState();
+            BlockState seedState = blockItem.getBlock().defaultBlockState();
+            int progress = blockEntity.progress;
+            int maxProgress = blockEntity.maxProgress;
 
-            int tintColor = 0xFFFFFF;
+            // CropBlock rendering (with age)
+            if (seedState.getBlock() instanceof CropBlock cropBlock) {
+                int maxAge = cropBlock.getMaxAge();
+                int age = Math.round((float) progress / maxProgress * maxAge);
 
-            if (blockItem.getBlock() instanceof IColored) {
-                String colorName = seedStack.get(CoreDataComponents.COLOR.get());
-                if (colorName != null) {
-
-                    DyeColor dyeColor = DyeColor.valueOf(colorName.toUpperCase());
-                    tintColor = ColorMap.getColorValue(dyeColor);
-
-                }
-            }
-
-            if (blockItem.getBlock() instanceof BrightSapling) {
-
-                ItemStack stack = pBlockEntity.getSeed();
-
-                for (String colorTag : CoreTags.Blocks.COLOR_TAGS.keySet()) {
-                    if (stack.is(CoreTags.Items.COLOR_TAGS.get(colorTag))) {
-                        DyeColor dyeColor = DyeColor.valueOf(colorTag.toUpperCase());
-                        tintColor = ColorMap.getColorValue(dyeColor);
-
+                for (Property<?> prop : cropBlock.getStateDefinition().getProperties()) {
+                    if (prop instanceof IntegerProperty intProp && intProp.getPossibleValues().contains(age)) {
+                        seedState = seedState.setValue(intProp, age);
+                        break;
                     }
                 }
             }
-
-            if (seedAsBlock.getBlock() instanceof CropBlock ageCropBlock) {
-                int maxAge = ageCropBlock.getMaxAge();
-                int age = Math.round((float) progress / maxProgress * maxAge);
-
-                // Determine the correct age property
-                Property<?> ageProperty = null;
-                for (Property<?> property : ageCropBlock.getStateDefinition().getProperties()) {
-                    if (property instanceof IntegerProperty integerProperty) {
-                        if (integerProperty.getPossibleValues().contains(age)) {
-                            ageProperty = integerProperty;
-                            break;
-                        }
-                    }
-                }
-
-                if (ageProperty instanceof IntegerProperty integerProperty) {
-                    BlockState seedAsBlockCrop = seedAsBlock.setValue(integerProperty, age);
-
-                    pPoseStack.pushPose();
-                    pPoseStack.scale(0.8f, 0.8f, 0.8f);
-                    pPoseStack.translate(0.1f, 0.1f, 0.1f);
-
-                    renderWithTint(blockRenderDispatcher, seedAsBlockCrop, pPoseStack, pBufferSource, pPackedLight, pPackedOverlay, tintColor);
-
-                    pPoseStack.popPose();
-                }
+            // StemBlock (AGE_7)
+            else if (seedState.getBlock() instanceof StemBlock) {
+                int age = Math.min(7, Math.round((float) progress / maxProgress * 7));
+                seedState = seedState.setValue(BlockStateProperties.AGE_7, age);
             }
 
+            // Render seed
+            poseStack.pushPose();
 
-            else if (seedAsBlock.getBlock() instanceof StemBlock) {
-                int maxAge = 7;
-                int age = Math.round((float) progress / maxProgress * maxAge);
-                age = Math.min(age, maxAge);
-                BlockState seedAsBlockCrop = seedAsBlock.setValue(BlockStateProperties.AGE_7, age);
+            float growthProgress = progress / (float) maxProgress;
+            float minScale = 0.3f;
+            float maxScale = 0.6f;
+            float scale = minScale + growthProgress * (maxScale - minScale);
 
-                pPoseStack.pushPose();
-                pPoseStack.scale(0.8f, 0.8f, 0.8f);
-                pPoseStack.translate(0.1f, 0.1f, 0.1f);
+            poseStack.translate(0.5f, 0.1f, 0.5f);
+            poseStack.scale(scale, scale, scale);
+            poseStack.translate(-0.5f, 0.0f, -0.5f);
 
-                renderWithTint(blockRenderDispatcher, seedAsBlockCrop, pPoseStack, pBufferSource, pPackedLight, pPackedOverlay, tintColor);
+            blockRenderer.renderSingleBlock(
+                    seedState,
+                    poseStack,
+                    bufferSource,
+                    packedLight,
+                    packedOverlay
+            );
 
-                pPoseStack.popPose();
-
-            } else {
-
-                pPoseStack.pushPose();
-
-                float growthProgress = progress / (float) maxProgress;
-                float minScale = 0.3f;
-                float maxScale = 0.6f;
-                float scale = minScale + growthProgress * (maxScale - minScale);
-
-                pPoseStack.translate(0.5f, 0.1f, 0.5f);
-
-                pPoseStack.scale(scale, scale, scale);
-
-                pPoseStack.translate(-0.5f, 0.0f, -0.5f);
-
-                renderWithTint(blockRenderDispatcher, seedAsBlock, pPoseStack, pBufferSource, pPackedLight, pPackedOverlay, tintColor);
-
-                pPoseStack.popPose();
-            }
+            poseStack.popPose();
         }
-    }
-
-    private int getLightLevel(Level level, BlockPos pos) {
-        int bLight = level.getBrightness(LightLayer.BLOCK, pos);
-        int sLight = level.getBrightness(LightLayer.SKY, pos);
-        return LightTexture.pack(bLight, sLight);
-    }
-
-    private void renderWithTint(BlockRenderDispatcher blockRenderDispatcher, BlockState state,
-                                PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay, int tintColor) {
-        float r = (tintColor >> 16 & 0xFF) / 255.0F;
-        float g = (tintColor >> 8 & 0xFF) / 255.0F;
-        float b = (tintColor & 0xFF) / 255.0F;
-
-        blockRenderDispatcher.getModelRenderer().renderModel(
-                poseStack.last(),
-                bufferSource.getBuffer(RenderType.cutout()),
-                state,
-                blockRenderDispatcher.getBlockModel(state),
-                r, g, b,
-                packedLight,
-                packedOverlay,
-                ModelData.EMPTY,
-                null
-        );
     }
 
     private static void renderFluid(PoseStack.Pose pose, VertexConsumer consumer, BlockEntity entity, Fluid fluid, float fillAmount, int packedLight) {
@@ -249,7 +123,7 @@ public class ClocheBlockEntityRenderer implements BlockEntityRenderer<ClocheBloc
     public static void renderFluid(PoseStack.Pose pose, VertexConsumer consumer, Fluid fluid, float fillAmount, int color, int packedLight) {
         // Get fluid texture
         IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluid);
-        TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(props.getStillTexture());
+        TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(Sheets.BLOCKS_MAPPER.sheet()).apply(props.getStillTexture());
 
         // Get sizes
         float fluidHeight = (14 * fillAmount) / 16.0f;

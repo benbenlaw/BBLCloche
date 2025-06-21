@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "cloche",
   "key": {
-    "S": {
-      "tag": "c:tools/shear"
-    },
-    "U": {
-      "item": "bblcore:upgrade_base"
-    }
+    "S": "#c:tools/shear",
+    "U": "bblcore:upgrade_base"
   },
   "pattern": [
     " S ",

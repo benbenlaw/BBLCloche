@@ -11,6 +11,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
@@ -19,11 +20,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.RecipeAccess;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.Tags;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
@@ -164,21 +167,29 @@ public class ClocheBlockEntity extends SyncableBlockEntity implements MenuProvid
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag compoundTag, HolderLookup.@NotNull Provider provider) {
-        super.saveAdditional(compoundTag, provider);
-        compoundTag.put("inventory", this.itemHandler.serializeNBT(provider));
-        compoundTag.putInt("progress", progress);
-        compoundTag.putInt("maxProgress", maxProgress);
-        compoundTag.putString("errorMessage", errorMessage);
+    public void preRemoveSideEffects(@NotNull BlockPos pos, @NotNull BlockState state) {
+        drops();
+        super.preRemoveSideEffects(pos, state);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compoundTag, HolderLookup.@NotNull Provider provider) {
-        this.itemHandler.deserializeNBT(provider, compoundTag.getCompound("inventory"));
-        progress = compoundTag.getInt("progress");
-        maxProgress = compoundTag.getInt("maxProgress");
-        errorMessage = compoundTag.getString("errorMessage");
-        super.loadAdditional(compoundTag, provider);
+    protected void saveAdditional(ValueOutput valueOutput) {
+        itemHandler.serialize(valueOutput);
+        valueOutput.putInt("progress", progress);
+        valueOutput.putInt("maxProgress", maxProgress);
+        valueOutput.putString("errorMessage", errorMessage);
+
+        super.saveAdditional(valueOutput);
+    }
+
+    @Override
+    protected void loadAdditional(ValueInput valueInput) {
+        super.loadAdditional(valueInput);
+
+        itemHandler.deserialize(valueInput);
+        progress = valueInput.getIntOr("progress", 0);
+        maxProgress = valueInput.getIntOr("maxProgress", 1000000);
+        errorMessage = valueInput.getStringOr("errorMessage", "");
     }
 
     public void drops() {
@@ -209,7 +220,10 @@ public class ClocheBlockEntity extends SyncableBlockEntity implements MenuProvid
                 }
             };
 
-            cachedRecipe = level.getRecipeManager().getRecipeFor(ClocheRecipe.Type.INSTANCE, inventory, level);
+            assert level != null;
+            RecipeAccess recipeAccess = level.recipeAccess();
+            RecipeManager recipeManager = (RecipeManager) recipeAccess;
+            cachedRecipe = recipeManager.getRecipeFor(ClocheRecipe.Type.INSTANCE, inventory, level);
 
             // Update last inputs
             lastSeed = getSeed().copy();
@@ -331,7 +345,10 @@ public class ClocheBlockEntity extends SyncableBlockEntity implements MenuProvid
                 return itemHandler.getSlots();
             }
         };
-        Optional<RecipeHolder<DimensionalUpgradeRecipe>> match = level.getRecipeManager()
+        RecipeAccess recipeAccess = level.recipeAccess();
+        RecipeManager recipeManager = (RecipeManager) recipeAccess;
+
+        Optional<RecipeHolder<DimensionalUpgradeRecipe>> match = recipeManager
                 .getRecipeFor(DimensionalUpgradeRecipe.Type.INSTANCE, inventory, level);
         return match.map(recipeHolder -> recipeHolder.value().dimension());
     }

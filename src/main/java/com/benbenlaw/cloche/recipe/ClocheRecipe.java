@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.benbenlaw.cloche.block.entity.ClocheBlockEntity.*;
@@ -24,7 +25,7 @@ import static com.benbenlaw.cloche.block.entity.ClocheBlockEntity.*;
 public record ClocheRecipe (
         Ingredient seed,
         Ingredient soil,
-        Ingredient catalyst,
+        Optional<Ingredient> catalyst,
         String dimension,
         int duration,
         NonNullList<ChanceResult> results,
@@ -36,7 +37,7 @@ public record ClocheRecipe (
 
                 boolean needCatalyst = !catalyst.isEmpty();
                 if (needCatalyst) {
-                        if (catalyst.test(container.getItem(CATALYST_SLOT))) {
+                        if (catalyst.get().test(container.getItem(CATALYST_SLOT))) {
                                 return seed.test(container.getItem(SEED_SLOT)) && soil.test(container.getItem(SOIL_SLOT));
                         } else {
                                 return false;
@@ -50,16 +51,6 @@ public record ClocheRecipe (
         @Override
         public @NotNull ItemStack assemble(@NotNull RecipeInput input, HolderLookup.@NotNull Provider provider) {
                 return results.getFirst().stack().copy();
-        }
-
-        @Override
-        public boolean canCraftInDimensions(int x, int y) {
-                return true;
-        }
-
-        @Override
-        public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider provider) {
-                return results.getFirst().stack();
         }
 
         public List<ItemStack> getResults() {
@@ -88,7 +79,7 @@ public record ClocheRecipe (
         public Ingredient getSoil() {
                 return soil;
         }
-        public Ingredient getCatalyst() {
+        public Optional<Ingredient> getCatalyst() {
                 return catalyst;
         }
         public String getDimension() {
@@ -101,13 +92,23 @@ public record ClocheRecipe (
                 return duration;
         }
         @Override
-        public @NotNull RecipeSerializer<?> getSerializer() {
+        public RecipeSerializer<? extends Recipe<RecipeInput>> getSerializer() {
                 return ClocheRecipe.Serializer.INSTANCE;
         }
 
         @Override
-        public @NotNull RecipeType<?> getType() {
+        public RecipeType<? extends Recipe<RecipeInput>> getType() {
                 return ClocheRecipe.Type.INSTANCE;
+        }
+
+        @Override
+        public PlacementInfo placementInfo() {
+                return PlacementInfo.create(seed);
+        }
+
+        @Override
+        public RecipeBookCategory recipeBookCategory() {
+                return RecipeBookCategories.CRAFTING_MISC;
         }
 
         public static class Type implements RecipeType<ClocheRecipe> {
@@ -121,7 +122,8 @@ public record ClocheRecipe (
                         instance.group(
                                 Ingredient.CODEC.fieldOf("seed").forGetter(ClocheRecipe::seed),
                                 Ingredient.CODEC.fieldOf("soil").forGetter(ClocheRecipe::soil),
-                                Ingredient.CODEC.fieldOf("catalyst").orElse(Ingredient.EMPTY).forGetter(ClocheRecipe::catalyst),
+                                Ingredient.CODEC.optionalFieldOf("catalyst").forGetter(ClocheRecipe::catalyst),
+                                //Ingredient.CODEC.optionalFieldOf("catalyst", Ingredient.of(ItemStack.EMPTY.getItem())).forGetter(ClocheRecipe::catalyst),
                                 Codec.STRING.optionalFieldOf("dimension", "all").forGetter(ClocheRecipe::dimension),
                                 Codec.INT.fieldOf("duration").forGetter(ClocheRecipe::duration),
                                 Codec.list(ChanceResult.CODEC).fieldOf("results").flatXmap(chanceResults -> {
@@ -154,7 +156,7 @@ public record ClocheRecipe (
                 private static ClocheRecipe read(RegistryFriendlyByteBuf buffer) {
                         Ingredient seed = Ingredient.CONTENTS_STREAM_CODEC.decode(buffer);
                         Ingredient soil = Ingredient.CONTENTS_STREAM_CODEC.decode(buffer);
-                        Ingredient catalyst = Ingredient.CONTENTS_STREAM_CODEC.decode(buffer);
+                        Optional<Ingredient> catalyst = Ingredient.OPTIONAL_CONTENTS_STREAM_CODEC.decode(buffer).or(Optional::empty);
                         String dimension = buffer.readUtf(Short.MAX_VALUE);
                         int duration = buffer.readInt();
                         int size = buffer.readVarInt();
@@ -166,7 +168,7 @@ public record ClocheRecipe (
                 private static void write(RegistryFriendlyByteBuf buffer, ClocheRecipe recipe) {
                         Ingredient.CONTENTS_STREAM_CODEC.encode(buffer, recipe.seed);
                         Ingredient.CONTENTS_STREAM_CODEC.encode(buffer, recipe.soil);
-                        Ingredient.CONTENTS_STREAM_CODEC.encode(buffer, recipe.catalyst);
+                        Ingredient.OPTIONAL_CONTENTS_STREAM_CODEC.encode(buffer, recipe.catalyst);
                         buffer.writeUtf(recipe.dimension, Short.MAX_VALUE);
                         buffer.writeInt(recipe.duration);
                         buffer.writeVarInt(recipe.results.size());

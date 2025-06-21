@@ -6,15 +6,14 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
 public class ClocheBlockTags extends BlockTagsProvider {
 
-    ClocheBlockTags(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, ExistingFileHelper existingFileHelper) {
-        super(output, lookupProvider, Cloche.MOD_ID, existingFileHelper);
+    public ClocheBlockTags(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+        super(output, registries, Cloche.MOD_ID);
     }
     @Override
     protected void addTags(HolderLookup.@NotNull Provider provider) {

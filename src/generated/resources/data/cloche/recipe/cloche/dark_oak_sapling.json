@@ -1,6 +1,5 @@
 {
   "type": "cloche:cloche",
-  "catalyst": [],
   "duration": 1200,
   "results": [
     {
@@ -31,14 +30,10 @@
       }
     }
   ],
-  "seed": {
-    "item": "minecraft:dark_oak_sapling"
-  },
+  "seed": "minecraft:dark_oak_sapling",
   "shears_result": {
     "count": 2,
     "id": "minecraft:dark_oak_leaves"
   },
-  "soil": {
-    "tag": "minecraft:dirt"
-  }
+  "soil": "#minecraft:dirt"
 }

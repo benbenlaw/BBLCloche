@@ -17,28 +17,26 @@ import java.util.concurrent.CompletableFuture;
 @EventBusSubscriber(modid = Cloche.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class DataGenerators {
 
+
     @SubscribeEvent
-    public static void gatherData(GatherDataEvent event) {
+    public static void gatherData(GatherDataEvent.Client event) {
 
         DataGenerator generator = event.getGenerator();
         PackOutput packOutput = generator.getPackOutput();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
-        generator.addProvider(event.includeServer(), new ClocheRecipesData(packOutput, event.getLookupProvider()));
+        generator.addProvider(true, new ClocheRecipesData.Runner(packOutput, event.getLookupProvider()));
 
-        generator.addProvider(event.includeServer(), new LootTableProvider(packOutput, Collections.emptySet(),
+        generator.addProvider(true, new LootTableProvider(packOutput, Collections.emptySet(),
                 List.of(new LootTableProvider.SubProviderEntry(ClocheLootTableProvider::new, LootContextParamSets.BLOCK)), event.getLookupProvider()));
 
-        ClocheBlockTags blockTags = new ClocheBlockTags(packOutput, lookupProvider, event.getExistingFileHelper());
-        generator.addProvider(event.includeServer(), blockTags);
+        ClocheBlockTags blockTags = new ClocheBlockTags(packOutput, lookupProvider);
+        generator.addProvider(true, blockTags);
 
-        ClocheItemTags itemTags = new ClocheItemTags(packOutput, lookupProvider, blockTags, event.getExistingFileHelper());
-        generator.addProvider(event.includeServer(), itemTags);
+        ClocheItemTags itemTags = new ClocheItemTags(packOutput, lookupProvider);
+        generator.addProvider(true, itemTags);
 
-        generator.addProvider(event.includeClient(), new ClocheItemModelProvider(packOutput, event.getExistingFileHelper()));
-        generator.addProvider(event.includeClient(), new ClocheBlockStatesProvider(packOutput, event.getExistingFileHelper()));
-
-
+        generator.addProvider(true, new ClocheModelProvider(packOutput));
     }
 }
 

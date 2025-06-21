@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "cloche",
   "key": {
-    "G": {
-      "tag": "c:ingots/gold"
-    },
-    "U": {
-      "item": "bblcore:upgrade_base"
-    }
+    "G": "#c:ingots/gold",
+    "U": "bblcore:upgrade_base"
   },
   "pattern": [
     " G ",

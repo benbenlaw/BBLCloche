@@ -1,15 +1,11 @@
 package com.benbenlaw.cloche.recipe;
 
-import com.benbenlaw.core.recipe.ChanceResult;
-import com.benbenlaw.core.recipe.NoInventoryRecipe;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
@@ -34,23 +30,23 @@ public record DimensionalUpgradeRecipe (Ingredient ingredient, String dimension)
     }
 
     @Override
-    public boolean canCraftInDimensions(int p_43999_, int p_44000_) {
-        return true;
-    }
-
-    @Override
-    public ItemStack getResultItem(HolderLookup.Provider p_336125_) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<? extends Recipe<RecipeInput>> getSerializer() {
         return DimensionalUpgradeRecipe.Serializer.INSTANCE;
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public RecipeType<? extends Recipe<RecipeInput>> getType() {
         return DimensionalUpgradeRecipe.Type.INSTANCE;
+    }
+
+    @Override
+    public PlacementInfo placementInfo() {
+        return PlacementInfo.create(ingredient);
+    }
+
+    @Override
+    public RecipeBookCategory recipeBookCategory() {
+        return RecipeBookCategories.CRAFTING_MISC;
     }
 
     public static class Type implements RecipeType<DimensionalUpgradeRecipe> {

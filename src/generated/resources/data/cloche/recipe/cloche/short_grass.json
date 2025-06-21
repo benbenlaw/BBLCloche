@@ -1,6 +1,5 @@
 {
   "type": "cloche:cloche",
-  "catalyst": [],
   "duration": 1200,
   "results": [
     {
@@ -10,10 +9,6 @@
       }
     }
   ],
-  "seed": {
-    "item": "minecraft:short_grass"
-  },
-  "soil": {
-    "tag": "minecraft:dirt"
-  }
+  "seed": "minecraft:short_grass",
+  "soil": "#minecraft:dirt"
 }

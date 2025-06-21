@@ -9,12 +9,8 @@
   "category": "misc",
   "group": "cloche",
   "key": {
-    "G": {
-      "tag": "twilightforest:logs"
-    },
-    "U": {
-      "item": "bblcore:upgrade_base"
-    }
+    "G": "#twilightforest:logs",
+    "U": "bblcore:upgrade_base"
   },
   "pattern": [
     " G ",

@@ -1,6 +1,5 @@
 {
   "type": "cloche:cloche",
-  "catalyst": [],
   "duration": 1200,
   "results": [
     {
@@ -10,10 +9,6 @@
       }
     }
   ],
-  "seed": {
-    "item": "minecraft:carrot"
-  },
-  "soil": {
-    "tag": "minecraft:dirt"
-  }
+  "seed": "minecraft:carrot",
+  "soil": "#minecraft:dirt"
 }

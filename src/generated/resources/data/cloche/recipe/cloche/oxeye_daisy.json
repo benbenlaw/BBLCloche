@@ -1,6 +1,5 @@
 {
   "type": "cloche:cloche",
-  "catalyst": [],
   "duration": 1200,
   "results": [
     {
@@ -10,10 +9,6 @@
       }
     }
   ],
-  "seed": {
-    "item": "minecraft:oxeye_daisy"
-  },
-  "soil": {
-    "tag": "minecraft:dirt"
-  }
+  "seed": "minecraft:oxeye_daisy",
+  "soil": "#minecraft:dirt"
 }

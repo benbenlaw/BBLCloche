@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "cloche",
   "key": {
-    "G": {
-      "tag": "c:obsidians"
-    },
-    "U": {
-      "item": "cloche:fixed_speed_upgrade_2"
-    }
+    "G": "#c:obsidians",
+    "U": "cloche:fixed_speed_upgrade_2"
   },
   "pattern": [
     " G ",

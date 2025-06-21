@@ -3,15 +3,9 @@
   "category": "misc",
   "group": "cloche",
   "key": {
-    "D": {
-      "tag": "minecraft:dirt"
-    },
-    "I": {
-      "tag": "c:ingots/iron"
-    },
-    "W": {
-      "tag": "c:buckets/water"
-    }
+    "D": "#minecraft:dirt",
+    "I": "#c:ingots/iron",
+    "W": "#c:buckets/water"
   },
   "pattern": [
     "III",

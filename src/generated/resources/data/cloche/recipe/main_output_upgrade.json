@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "cloche",
   "key": {
-    "C": {
-      "item": "minecraft:golden_carrot"
-    },
-    "U": {
-      "item": "bblcore:upgrade_base"
-    }
+    "C": "minecraft:golden_carrot",
+    "U": "bblcore:upgrade_base"
   },
   "pattern": [
     " C ",

@@ -1,6 +1,5 @@
 {
   "type": "cloche:cloche",
-  "catalyst": [],
   "duration": 1200,
   "results": [
     {
@@ -17,10 +16,6 @@
       }
     }
   ],
-  "seed": {
-    "item": "minecraft:wheat_seeds"
-  },
-  "soil": {
-    "tag": "minecraft:dirt"
-  }
+  "seed": "minecraft:wheat_seeds",
+  "soil": "#minecraft:dirt"
 }

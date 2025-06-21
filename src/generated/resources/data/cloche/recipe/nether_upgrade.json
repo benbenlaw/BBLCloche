@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "cloche",
   "key": {
-    "U": {
-      "item": "bblcore:upgrade_base"
-    },
-    "W": {
-      "item": "minecraft:nether_wart_block"
-    }
+    "U": "bblcore:upgrade_base",
+    "W": "minecraft:nether_wart_block"
   },
   "pattern": [
     " W ",

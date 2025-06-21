@@ -1,6 +1,5 @@
 {
   "type": "cloche:cloche",
-  "catalyst": [],
   "duration": 1200,
   "results": [
     {
@@ -10,10 +9,6 @@
       }
     }
   ],
-  "seed": {
-    "item": "minecraft:sea_pickle"
-  },
-  "soil": {
-    "tag": "c:buckets/water"
-  }
+  "seed": "minecraft:sea_pickle",
+  "soil": "#c:buckets/water"
 }

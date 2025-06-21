@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "cloche",
   "key": {
-    "G": {
-      "item": "minecraft:grass_block"
-    },
-    "U": {
-      "item": "bblcore:upgrade_base"
-    }
+    "G": "minecraft:grass_block",
+    "U": "bblcore:upgrade_base"
   },
   "pattern": [
     " G ",

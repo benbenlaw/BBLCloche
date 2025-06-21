@@ -1,10 +1,9 @@
 package com.benbenlaw.cloche.integration.jei;
-
+/*
 import com.benbenlaw.cloche.Cloche;
 import com.benbenlaw.cloche.block.ClocheBlocks;
 import com.benbenlaw.cloche.recipe.ClocheRecipe;
 import com.benbenlaw.cloche.recipe.ClocheRecipes;
-import com.benbenlaw.cloche.recipe.DimensionalUpgradeRecipe;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -16,12 +15,8 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @JeiPlugin
 public class JEIClochePlugin implements IModPlugin {
@@ -59,3 +54,5 @@ public class JEIClochePlugin implements IModPlugin {
 
     }
 }
+
+ */

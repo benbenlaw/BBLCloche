@@ -1,7 +1,6 @@
 package com.benbenlaw.cloche.block.entity;
 
 import com.benbenlaw.cloche.Cloche;
-import com.benbenlaw.cloche.block.ClocheBlock;
 import com.benbenlaw.cloche.block.ClocheBlocks;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -20,23 +19,15 @@ public class ClocheBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
             DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, Cloche.MOD_ID);
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ClocheBlockEntity>> CLOCHE_BLOCK_ENTITY =
-            register("cloche_block_entity", () ->
-                    BlockEntityType.Builder.of(ClocheBlockEntity::new, ClocheBlocks.CLOCHE.get()));
+    public static final Supplier<BlockEntityType<ClocheBlockEntity>> CLOCHE_BLOCK_ENTITY =
+            BLOCK_ENTITIES.register("cloche_block_entity", () ->
+                    new BlockEntityType<>(ClocheBlockEntity::new, ClocheBlocks.CLOCHE.get()));
+
+
+
 
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK,
                 ClocheBlockEntities.CLOCHE_BLOCK_ENTITY.get(), ClocheBlockEntity::getItemHandlerCapability);
     }
-
-    public static <T extends BlockEntity> DeferredHolder<BlockEntityType<?>, BlockEntityType<T>> register(@Nonnull String name, @Nonnull Supplier<BlockEntityType.Builder<T>> initializer) {
-        return BLOCK_ENTITIES.register(name, () -> initializer.get().build(null));
-    }
-    public static void register(IEventBus eventBus) {
-        BLOCK_ENTITIES.register(eventBus);
-    }
-
-
-
-
 }

@@ -1,6 +1,5 @@
 {
   "type": "cloche:cloche",
-  "catalyst": [],
   "duration": 1200,
   "results": [
     {
@@ -24,14 +23,10 @@
       }
     }
   ],
-  "seed": {
-    "item": "minecraft:cherry_sapling"
-  },
+  "seed": "minecraft:cherry_sapling",
   "shears_result": {
     "count": 2,
     "id": "minecraft:cherry_leaves"
   },
-  "soil": {
-    "tag": "minecraft:dirt"
-  }
+  "soil": "#minecraft:dirt"
 }

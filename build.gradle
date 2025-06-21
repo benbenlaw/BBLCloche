@@ -5,7 +5,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.gradle.userdev' version '7.0.165'
+    id 'net.neoforged.moddev' version '2.0.78'
     id 'net.darkhax.curseforgegradle' version '1.1.24'
     id "com.modrinth.minotaur" version "2.+"
 }
@@ -31,28 +31,41 @@ base {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
-runs {
-    configureEach {
-        systemProperty 'forge.logging.markers', 'REGISTRIES'
-        systemProperty 'forge.logging.console.level', 'debug'
+neoForge {
+    version = project.neo_version
 
-        modSource project.sourceSets.main
+    parchment {
+        mappingsVersion = project.parchment_mappings_version
+        minecraftVersion = project.parchment_minecraft_version
     }
 
-    client {
-        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+    runs {
+        configureEach {
+            systemProperty 'forge.logging.markers', 'REGISTRIES'
+            systemProperty 'forge.logging.console.level', 'debug'
+        }
+
+        client {
+            client()
+            systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+        }
+
+        server {
+            server()
+            systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+            programArgument '--nogui'
+        }
+
+        data {
+            clientData()
+            programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+        }
     }
 
-    server {
-        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
-        programArgument '--nogui'
-    }
-    gameTestServer {
-        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
-    }
-
-    data {
-        programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+    mods {
+        cloche {
+            sourceSet sourceSets.main
+        }
     }
 }
 
@@ -66,26 +79,10 @@ dependencies {
 
     implementation "net.neoforged:neoforge:${neo_version}"
 
-    //BBL Core
-    compileOnly "curse.maven:bbl-core-1135181:6486837"
-    runtimeOnly "curse.maven:bbl-core-1135181:6486837"
+    //BBL 6679304
+    compileOnly "curse.maven:bbl-core-1135181:6679405"
+    runtimeOnly "curse.maven:bbl-core-1135181:6679405"
 
-    //BBL Colors
-    compileOnly "curse.maven:bbl-colors-1218206:6378237"
-    runtimeOnly "curse.maven:bbl-core-1218206:6378237"
-
-    //JEI
-    compileOnly "curse.maven:jei-238222:5846880"
-    runtimeOnly "curse.maven:jei-238222:5846880"
-
-    //Caveopolis 5.0.20
-    compileOnly "curse.maven:caveopolis-mod-639186:5982032"
-    runtimeOnly "curse.maven:caveopolis-mod-639186:5982032"
-
-    //EMI
-
-    compileOnly "curse.maven:emi-580555:5872513"
-    runtimeOnly "curse.maven:emi-580555:5872513"
 }
 
 tasks.withType(ProcessResources).configureEach {
@@ -156,7 +153,7 @@ tasks.register('publishCurseForge', TaskPublishCurseForge) {
     mainFile.addOptional("jei") // JEI
     mainFile.addRequirement("bbl-core")
     mainFile.releaseType = "release"
-    mainFile.gameVersions.addAll("1.21", "1.21.1")
+    mainFile.gameVersions.addAll(minecraft_version)
 }
 
 tasks.getByName("modrinth").setGroup("modpublishing")
@@ -168,7 +165,7 @@ modrinth {
     versionName = "bbl-cloche-" + "$minecraft_version" + "-" + "$mod_version"
     uploadFile = jar // With Loom, this MUST be set to `remapJar` instead of `jar`!
 
-    gameVersions.addAll("1.21", "1.21.1")
+    gameVersions.addAll(minecraft_version)
 
     loaders = ["neoforge"]
     changelog = project.changelog

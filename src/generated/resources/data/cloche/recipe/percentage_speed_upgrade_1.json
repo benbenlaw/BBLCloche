@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "cloche",
   "key": {
-    "G": {
-      "item": "minecraft:clock"
-    },
-    "U": {
-      "item": "bblcore:upgrade_base"
-    }
+    "G": "minecraft:clock",
+    "U": "bblcore:upgrade_base"
   },
   "pattern": [
     " G ",

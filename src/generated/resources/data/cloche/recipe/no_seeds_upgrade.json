@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "cloche",
   "key": {
-    "S": {
-      "tag": "c:seeds"
-    },
-    "U": {
-      "item": "bblcore:upgrade_base"
-    }
+    "S": "#c:seeds",
+    "U": "bblcore:upgrade_base"
   },
   "pattern": [
     " S ",

@@ -3,12 +3,15 @@ package com.benbenlaw.cloche.event.client;
 import com.benbenlaw.cloche.Cloche;
 import com.benbenlaw.cloche.recipe.DimensionalUpgradeRecipe;
 import com.benbenlaw.cloche.recipe.SpeedUpgradeRecipe;
+import com.benbenlaw.cloche.util.ClientDimensionalUpgradeRecipeCache;
+import com.benbenlaw.cloche.util.ClientSpeedUpgradeRecipeCache;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -16,12 +19,14 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 @EventBusSubscriber(modid = Cloche.MOD_ID ,value = Dist.CLIENT)
 
 public class SpeedUpgradeTooltip {
+
 
     @SubscribeEvent
     public static void onItemTooltip(ItemTooltipEvent event) {
@@ -35,19 +40,16 @@ public class SpeedUpgradeTooltip {
 
         Level level = event.getEntity().level();
 
-        List<RecipeHolder<SpeedUpgradeRecipe>> speedRecipe = level.getRecipeManager()
-                .getAllRecipesFor(SpeedUpgradeRecipe.Type.INSTANCE);
 
-        List<RecipeHolder<DimensionalUpgradeRecipe>> dimensionRecipes = level.getRecipeManager()
-                .getAllRecipesFor(DimensionalUpgradeRecipe.Type.INSTANCE);
+        Collection<SpeedUpgradeRecipe> speedRecipe = ClientSpeedUpgradeRecipeCache.getRecipes();
+        Collection<DimensionalUpgradeRecipe> dimensionRecipe = ClientDimensionalUpgradeRecipeCache.getRecipes();
 
         // Speed Upgrade Tooltip, adds tooltip to the item if it is in a speed upgrade recipe
-        for (RecipeHolder<SpeedUpgradeRecipe> recipeHolder : speedRecipe) {
-            SpeedUpgradeRecipe speedUpgradeRecipe = recipeHolder.value();
+        for (SpeedUpgradeRecipe recipeHolder : speedRecipe) {
 
-            if (speedUpgradeRecipe.ingredient().test(upgradeStack)) {
+            if (recipeHolder.ingredient().test(upgradeStack)) {
                 if (Screen.hasShiftDown()) {
-                    MutableComponent newTooltip = getMutableComponent(speedUpgradeRecipe);
+                    MutableComponent newTooltip = getMutableComponent(recipeHolder);
                     components.add(newTooltip.withStyle(ChatFormatting.YELLOW));
                 }
                 else {
@@ -57,12 +59,11 @@ public class SpeedUpgradeTooltip {
         }
 
         // Dim Upgrade Tooltip, adds tooltip to the item is a dim upgrade recipe
-        for (RecipeHolder<DimensionalUpgradeRecipe> recipeHolder : dimensionRecipes) {
-            DimensionalUpgradeRecipe dimensionalUpgradeRecipe = recipeHolder.value();
+        for (DimensionalUpgradeRecipe recipeHolder : dimensionRecipe) {
 
-            if (dimensionalUpgradeRecipe.ingredient().test(upgradeStack)) {
+            if (recipeHolder.ingredient().test(upgradeStack)) {
                 if (Screen.hasShiftDown()) {
-                    MutableComponent newTooltip = getMutableComponent(dimensionalUpgradeRecipe);
+                    MutableComponent newTooltip = getMutableComponent(recipeHolder);
                     components.add(newTooltip.withStyle(ChatFormatting.YELLOW));
                     break;
                 }
@@ -85,8 +86,7 @@ public class SpeedUpgradeTooltip {
                 "tooltip.cloche.upgrade.dimension", displayDimensionName
         );
     }
-
-
+    
     @NotNull
     private static MutableComponent getMutableComponent(SpeedUpgradeRecipe speedUpgradeRecipe) {
         int durationReduction = speedUpgradeRecipe.duration();
