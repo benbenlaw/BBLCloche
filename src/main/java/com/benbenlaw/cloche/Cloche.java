@@ -52,7 +52,7 @@ public class Cloche{
         ClocheBlockEntities.registerCapabilities(event);
     }
 
-    @EventBusSubscriber(modid = Cloche.MOD_ID, bus = EventBusSubscriber.Bus.MOD ,value = Dist.CLIENT)
+    @EventBusSubscriber(modid = Cloche.MOD_ID,value = Dist.CLIENT)
     public static class ClientModEvents {
         @SubscribeEvent
         public static void registerScreens(RegisterMenuScreensEvent event) {

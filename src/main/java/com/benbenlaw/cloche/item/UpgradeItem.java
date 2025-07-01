@@ -20,6 +20,6 @@ public class UpgradeItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack p_41421_, TooltipContext p_339594_, TooltipDisplay p_399753_, Consumer<Component> p_399884_, TooltipFlag p_41424_) {
-        TooltipUtil.addShiftTooltip(p_399753_,p_399884_, tooltip);
+        TooltipUtil.addShiftTooltip(p_399753_,p_399884_, Component.nullToEmpty(tooltip));
     }
 }
