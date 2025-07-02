@@ -1,5 +1,8 @@
 Changelog BBL Cloche
 
+1.5.1
+Fixed loader not being set in updates
+
 1.5.0
 Updated to Minecraft 1.21.7
 Updated to BBL Core 1.5.0
