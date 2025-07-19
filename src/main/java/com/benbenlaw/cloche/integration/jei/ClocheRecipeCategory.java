@@ -1,9 +1,10 @@
 package com.benbenlaw.cloche.integration.jei;
-/*
+
 import com.benbenlaw.cloche.Cloche;
 import com.benbenlaw.cloche.block.ClocheBlocks;
 import com.benbenlaw.cloche.recipe.ClocheRecipe;
-import com.benbenlaw.core.block.colored.util.IColored;
+import com.benbenlaw.cloche.util.ClientClocheRecipeCache;
+import com.benbenlaw.core.block.brightable.util.IColored;
 import com.benbenlaw.core.item.CoreDataComponents;
 import com.benbenlaw.core.item.colored.ColoredItem;
 import com.benbenlaw.core.recipe.ChanceResult;
@@ -15,49 +16,62 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ClocheRecipeCategory implements IRecipeCategory<ClocheRecipe> {
 
     public final static ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(Cloche.MOD_ID, "cloche");
     public final static ResourceLocation TEXTURE =
             ResourceLocation.fromNamespaceAndPath(Cloche.MOD_ID, "textures/gui/jei_cloche.png");
-    static final RecipeType<ClocheRecipe> RECIPE_TYPE = RecipeType.create(Cloche.MOD_ID, "cloche",
-            ClocheRecipe.class);
+    public static final IRecipeType<ClocheRecipe> CLOCHE_TYPE =
+            IRecipeType.create(ResourceLocation.fromNamespaceAndPath(Cloche.MOD_ID, "cloche"), ClocheRecipe.class);
     private final IDrawable background;
     private final IDrawable icon;
 
     @Override
     public @Nullable ResourceLocation getRegistryName(ClocheRecipe recipe) {
-        assert Minecraft.getInstance().level != null;
-        return Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(ClocheRecipe.Type.INSTANCE).stream()
-                .filter(recipeHolder -> recipeHolder.value().equals(recipe))
-                .map(RecipeHolder::id)
+        // Use the cached recipes instead of fetching from the RecipeManager
+        return ClientClocheRecipeCache.getRecipes().stream()
+                .filter(r -> r.equals(recipe))
                 .findFirst()
+                .map(r -> {
+                    // Find the corresponding ID in the cache map
+                    for (Map.Entry<ResourceLocation, ClocheRecipe> entry : ClientClocheRecipeCache.cachedRecipes.entrySet()) {
+                        if (entry.getValue().equals(recipe)) {
+                            return entry.getKey();
+                        }
+                    }
+                    return null;
+                })
                 .orElse(null);
     }
     public ClocheRecipeCategory(IGuiHelper helper) {
         this.background = helper.createDrawable(TEXTURE, 0, 0, 140, 37);
         this.icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ClocheBlocks.CLOCHE.get()));
     }
+
     @Override
-    public RecipeType<ClocheRecipe> getRecipeType() {
-        return JEIClochePlugin.CLOCHE;
+    public @NotNull IRecipeType<ClocheRecipe> getRecipeType() {
+        return CLOCHE_TYPE;
     }
 
     @Override
-    public Component getTitle() {
+    public @NotNull Component getTitle() {
         return Component.translatable("block.cloche.cloche");
     }
 
@@ -74,9 +88,12 @@ public class ClocheRecipeCategory implements IRecipeCategory<ClocheRecipe> {
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, ClocheRecipe recipe, IFocusGroup focusGroup) {
 
-        if (Block.byItem(recipe.seed().getItems()[0].getItem()) instanceof IColored || recipe.seed().getItems()[0].getItem() instanceof ColoredItem) {
-            String color = recipe.seed().getItems()[0].get(CoreDataComponents.COLOR);
-            ItemStack coloredStack = new ItemStack(recipe.seed().getItems()[0].getItem());
+    /* TODO re-enable colored blocks in the future
+
+
+        if (Block.byItem((Item) recipe.seed().getValues().get(0)) instanceof IColored || recipe.seed().getValues().get(0) instanceof ColoredItem) {
+            String color = ((ColoredItem) recipe.seed().getValues().get(0)).getColor(new ItemStack(recipe.seed().getValues().get(0)));
+            ItemStack coloredStack = new ItemStack(recipe.seed().getValues().get(0));
             coloredStack.set(CoreDataComponents.COLOR, color);
             builder.addSlot(RecipeIngredientRole.INPUT, 2, 2).addItemStack(coloredStack)
                     .addRichTooltipCallback((slotView, tooltip) -> {
@@ -85,7 +102,10 @@ public class ClocheRecipeCategory implements IRecipeCategory<ClocheRecipe> {
                                     .append(Component.translatable(recipe.dimension()).withStyle(ChatFormatting.GOLD)));
                         }
                     });
-        } else {
+
+      } else {
+
+ */
             builder.addSlot(RecipeIngredientRole.INPUT, 2, 2).addIngredients(recipe.seed())
                     .addRichTooltipCallback((slotView, tooltip) -> {
                         if (!recipe.dimension().isEmpty()) {
@@ -93,16 +113,16 @@ public class ClocheRecipeCategory implements IRecipeCategory<ClocheRecipe> {
                                     .append(Component.translatable(recipe.dimension()).withStyle(ChatFormatting.GOLD)));
                         }
                     });
-        }
+       // }
 
 
         builder.addSlot(RecipeIngredientRole.INPUT, 2, 20).addIngredients(recipe.soil());
 
-        if (!recipe.catalyst().hasNoItems()) {
-            builder.addSlot(RecipeIngredientRole.CATALYST, 36, 11).addIngredients(recipe.catalyst())
+        if (recipe.catalyst().isPresent()) {
+            builder.addSlot(RecipeIngredientRole.RENDER_ONLY, 36, 11).addIngredients(recipe.catalyst().get())
                     .setBackground(JEIClochePlugin.slotDrawable, -1, -1);
         } else {
-            builder.addSlot(RecipeIngredientRole.CATALYST, 36, 11).addItemStack(Items.AIR.getDefaultInstance())
+            builder.addSlot(RecipeIngredientRole.RENDER_ONLY, 36, 11).addItemStack(Items.AIR.getDefaultInstance())
                     .setBackground(JEIClochePlugin.slotDrawable, -1, -1);
         }
 
@@ -148,5 +168,3 @@ public class ClocheRecipeCategory implements IRecipeCategory<ClocheRecipe> {
     }
 
 }
-
- */

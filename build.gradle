@@ -5,7 +5,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '2.0.78'
+    id 'net.neoforged.moddev' version '2.0.99'
     id 'net.darkhax.curseforgegradle' version '1.1.24'
     id "com.modrinth.minotaur" version "2.+"
 }
@@ -78,8 +78,11 @@ configurations {
 dependencies {
 
     //BBL 6679304
-    compileOnly "curse.maven:bbl-core-1135181:6716705"
-    runtimeOnly "curse.maven:bbl-core-1135181:6716705"
+    compileOnly "curse.maven:bbl-core-1135181:6756128"
+    runtimeOnly "curse.maven:bbl-core-1135181:6756128"
+
+    //JEI
+    implementation "curse.maven:jei-238222:6752455"
 
 }
 

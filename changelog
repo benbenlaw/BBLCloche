@@ -1,5 +1,8 @@
 Changelog BBL Cloche
 
+1.5.2
+Re enabled JEI support for cloche
+
 1.5.1
 Fixed loader not being set in updates
 

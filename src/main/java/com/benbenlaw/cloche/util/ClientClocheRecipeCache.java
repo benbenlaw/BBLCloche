@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class ClientClocheRecipeCache {
 
-    private static Map<ResourceLocation, ClocheRecipe> cachedRecipes = new HashMap<>();
+    public static Map<ResourceLocation, ClocheRecipe> cachedRecipes = new HashMap<>();
 
     public static void setRecipe(Map<ResourceLocation, ClocheRecipe> recipes) {
         cachedRecipes = recipes;
