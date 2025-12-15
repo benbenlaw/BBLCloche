@@ -130,7 +130,7 @@ public class ClocheBlockEntityRenderer implements BlockEntityRenderer<ClocheBloc
                 String colorName = seedStack.get(CoreDataComponents.COLOR.get());
                 if (colorName != null) {
 
-                    DyeColor dyeColor = DyeColor.valueOf(colorName.toUpperCase());
+                    DyeColor dyeColor = DyeColor.byName(colorName, null);
                     tintColor = ColorMap.getColorValue(dyeColor);
 
                 }
@@ -142,7 +142,7 @@ public class ClocheBlockEntityRenderer implements BlockEntityRenderer<ClocheBloc
 
                 for (String colorTag : CoreTags.Blocks.COLOR_TAGS.keySet()) {
                     if (stack.is(CoreTags.Items.COLOR_TAGS.get(colorTag))) {
-                        DyeColor dyeColor = DyeColor.valueOf(colorTag.toUpperCase());
+                        DyeColor dyeColor = DyeColor.byName(colorTag, null);
                         tintColor = ColorMap.getColorValue(dyeColor);
 
                     }
