@@ -12,9 +12,12 @@ import java.util.Set;
 
 public class ClocheLootTableProvider extends VanillaBlockLoot {
 
-    public ClocheLootTableProvider(HolderLookup.Provider p_344962_) {
-        super(p_344962_);
+    private final Set<Block> knownBlocks = new ReferenceOpenHashSet<>();
+
+    public ClocheLootTableProvider(HolderLookup.Provider provider) {
+        super(provider);
     }
+
     @Override
     protected void generate() {
 
@@ -27,7 +30,6 @@ public class ClocheLootTableProvider extends VanillaBlockLoot {
         super.add(block, table);
         knownBlocks.add(block);
     }
-    private final Set<Block> knownBlocks = new ReferenceOpenHashSet<>();
 
     @NotNull
     @Override

@@ -1,0 +1,14 @@
+{
+  "type": "cloche:cloche",
+  "duration": 1200,
+  "results": [
+    {
+      "item": {
+        "count": 1,
+        "id": "minecraft:pink_petals"
+      }
+    }
+  ],
+  "seed": "minecraft:pink_petals",
+  "soil": "#minecraft:dirt"
+}

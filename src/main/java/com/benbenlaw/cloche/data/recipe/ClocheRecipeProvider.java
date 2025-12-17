@@ -3,51 +3,49 @@ package com.benbenlaw.cloche.data.recipe;
 import com.benbenlaw.cloche.Cloche;
 import com.benbenlaw.cloche.recipe.ClocheRecipe;
 import com.benbenlaw.core.recipe.ChanceResult;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.advancements.criterion.RecipeUnlockedTrigger;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class ClocheRecipeProvider implements RecipeBuilder {
 
     protected String group;
     protected Ingredient seed;
     protected Ingredient soil;
-    protected Ingredient catalyst;
-    protected String dimension;
+    protected Optional<Ingredient> catalyst;
     protected int duration;
     protected NonNullList<ChanceResult> results;
     protected final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
     protected ItemStack shearsResult;
 
-    public ClocheRecipeProvider(Ingredient seed, Ingredient soil, Ingredient catalyst, String dimension, int duration, NonNullList<ChanceResult> results, ItemStack shearsResult) {
+    public ClocheRecipeProvider(Ingredient seed, Ingredient soil, Ingredient catalyst, int duration, NonNullList<ChanceResult> results, ItemStack shearsResult) {
         this.seed = seed;
         this.soil = soil;
-        this.catalyst = catalyst != null ? catalyst : Ingredient.of(ItemStack.EMPTY);
-        this.dimension = dimension != null ? dimension : "all";
+        this.catalyst = Optional.ofNullable(catalyst);
         this.duration = duration;
         this.results = results;
         this.shearsResult = shearsResult != null ? shearsResult : ItemStack.EMPTY;
     }
 
-    public static ClocheRecipeProvider ClocheRecipeBuilder(Ingredient seed, Ingredient soil, Ingredient catalyst, String dimension, int duration, NonNullList<ChanceResult> results, ItemStack shearsResult) {
-        return new ClocheRecipeProvider(seed, soil, catalyst, dimension, duration, results, shearsResult);
+    public static ClocheRecipeProvider ClocheRecipeBuilder(Ingredient seed, Ingredient soil, Ingredient catalyst, int duration, NonNullList<ChanceResult> results, ItemStack shearsResult) {
+        return new ClocheRecipeProvider(seed, soil, catalyst, duration, results, shearsResult);
     }
     @Override
     public @NotNull RecipeBuilder unlockedBy(String name, Criterion<?> criterion) {
@@ -66,20 +64,21 @@ public class ClocheRecipeProvider implements RecipeBuilder {
         return results.getFirst().stack().getItem();
     }
 
-    public void save(@NotNull RecipeOutput recipeOutput) {
-        this.save(recipeOutput, ResourceLocation.fromNamespaceAndPath(Cloche.MOD_ID, "cloche/")
-        );
+    @Override
+    public void save(@NotNull RecipeOutput recipeOutput, @NotNull String id) {
+        save(recipeOutput, ResourceKey.create(Registries.RECIPE, Cloche.identifier("cloche/" + id)));
     }
 
+
     @Override
-    public void save(@NotNull RecipeOutput recipeOutput, @NotNull ResourceLocation id) {
+    public void save(RecipeOutput recipeOutput, @NotNull ResourceKey<Recipe<?>> resourceKey) {
         Advancement.Builder builder = Advancement.Builder.advancement()
-                .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id))
-                .rewards(AdvancementRewards.Builder.recipe(id))
+                .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(resourceKey))
+                .rewards(AdvancementRewards.Builder.recipe(resourceKey))
                 .requirements(AdvancementRequirements.Strategy.OR);
         this.criteria.forEach(builder::addCriterion);
-        ClocheRecipe clocheRecipe = new ClocheRecipe(seed, soil, catalyst, dimension, duration, results, shearsResult);
-        recipeOutput.accept(id, clocheRecipe, builder.build(id.withPrefix("recipes/cloche/")));
+        ClocheRecipe clocheRecipe = new ClocheRecipe(seed, soil, catalyst, duration, results, shearsResult);
+        recipeOutput.accept(resourceKey, clocheRecipe, builder.build(resourceKey.identifier().withPrefix("recipes/cloche/")));
 
     }
 

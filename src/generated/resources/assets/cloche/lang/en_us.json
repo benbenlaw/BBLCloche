@@ -1,0 +1,12 @@
+{
+  "block.cloche.cloche": "Cloche",
+  "item.cloche.main_output_upgrade": "Main Output Upgrade",
+  "item.cloche.no_other_drops_upgrade": "No Other Drops Upgrade",
+  "item.cloche.no_seeds_upgrade": "No Seeds Upgrade",
+  "item.cloche.shears_upgrade": "Shears Upgrade",
+  "itemGroup.cloche": "Cloche",
+  "tooltip.upgrade.main_output": "Increases the main output by 1",
+  "tooltip.upgrade.no_other_drops": "Prevents all other drops except the main output",
+  "tooltip.upgrade.no_seeds": "Prevents seeds from being produced",
+  "tooltip.upgrade.shears": "Add the Shears drop to the outputs"
+}

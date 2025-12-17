@@ -1,0 +1,14 @@
+{
+  "type": "cloche:cloche",
+  "duration": 1200,
+  "results": [
+    {
+      "item": {
+        "count": 1,
+        "id": "minecraft:glow_lichen"
+      }
+    }
+  ],
+  "seed": "minecraft:glow_lichen",
+  "soil": "#c:stones"
+}

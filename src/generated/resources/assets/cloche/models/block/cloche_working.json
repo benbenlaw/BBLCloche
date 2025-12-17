@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "front": "cloche:block/cloche_front",
+    "side": "cloche:block/machine_side_working",
+    "top": "cloche:block/machine_top"
+  }
+}

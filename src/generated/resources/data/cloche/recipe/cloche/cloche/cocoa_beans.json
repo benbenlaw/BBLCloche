@@ -1,0 +1,14 @@
+{
+  "type": "cloche:cloche",
+  "duration": 1200,
+  "results": [
+    {
+      "item": {
+        "count": 1,
+        "id": "minecraft:cocoa_beans"
+      }
+    }
+  ],
+  "seed": "minecraft:cocoa_beans",
+  "soil": "#minecraft:jungle_logs"
+}

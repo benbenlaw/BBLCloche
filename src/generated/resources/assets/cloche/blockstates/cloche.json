@@ -1,0 +1,48 @@
+{
+  "variants": {
+    "facing=down,running=false": {
+      "model": "cloche:block/cloche_vertical",
+      "x": 180
+    },
+    "facing=down,running=true": {
+      "model": "cloche:block/cloche_working_vertical",
+      "x": 180
+    },
+    "facing=east,running=false": {
+      "model": "cloche:block/cloche",
+      "y": 90
+    },
+    "facing=east,running=true": {
+      "model": "cloche:block/cloche_working",
+      "y": 90
+    },
+    "facing=north,running=false": {
+      "model": "cloche:block/cloche"
+    },
+    "facing=north,running=true": {
+      "model": "cloche:block/cloche_working"
+    },
+    "facing=south,running=false": {
+      "model": "cloche:block/cloche",
+      "y": 180
+    },
+    "facing=south,running=true": {
+      "model": "cloche:block/cloche_working",
+      "y": 180
+    },
+    "facing=up,running=false": {
+      "model": "cloche:block/cloche_vertical"
+    },
+    "facing=up,running=true": {
+      "model": "cloche:block/cloche_working_vertical"
+    },
+    "facing=west,running=false": {
+      "model": "cloche:block/cloche",
+      "y": 270
+    },
+    "facing=west,running=true": {
+      "model": "cloche:block/cloche_working",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "type": "cloche:cloche",
+  "duration": 1200,
+  "results": [
+    {
+      "item": {
+        "count": 1,
+        "id": "minecraft:lilac"
+      }
+    }
+  ],
+  "seed": "minecraft:lilac",
+  "soil": "#minecraft:dirt"
+}

@@ -1,0 +1,14 @@
+{
+  "type": "cloche:cloche",
+  "duration": 1200,
+  "results": [
+    {
+      "item": {
+        "count": 1,
+        "id": "minecraft:orange_tulip"
+      }
+    }
+  ],
+  "seed": "minecraft:orange_tulip",
+  "soil": "#minecraft:dirt"
+}

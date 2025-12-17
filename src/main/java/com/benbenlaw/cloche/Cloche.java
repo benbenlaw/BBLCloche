@@ -1,13 +1,15 @@
 package com.benbenlaw.cloche;
 
+import com.benbenlaw.cloche.block.ClocheBlockEntities;
 import com.benbenlaw.cloche.block.ClocheBlocks;
-import com.benbenlaw.cloche.block.entity.ClocheBlockEntities;
-import com.benbenlaw.cloche.item.ClocheCreativeModeTab;
+import com.benbenlaw.cloche.block.ClocheCapabilities;
+import com.benbenlaw.cloche.item.ClocheCreativeTab;
 import com.benbenlaw.cloche.item.ClocheItems;
 import com.benbenlaw.cloche.networking.ClocheMessages;
 import com.benbenlaw.cloche.recipe.ClocheRecipes;
 import com.benbenlaw.cloche.screen.ClocheMenus;
-import com.benbenlaw.cloche.screen.ClocheScreen;
+import com.benbenlaw.cloche.screen.cloche.ClocheScreen;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -31,7 +33,7 @@ public class Cloche{
 
         ClocheBlocks.BLOCKS.register(modEventBus);
         ClocheBlockEntities.BLOCK_ENTITIES.register(modEventBus);
-        ClocheCreativeModeTab.CREATIVE_MODE_TABS.register(modEventBus);
+        ClocheCreativeTab.CREATIVE_MODE_TABS.register(modEventBus);
         ClocheItems.ITEMS.register(modEventBus);
         ClocheRecipes.SERIALIZER.register(modEventBus);
         ClocheRecipes.TYPES.register(modEventBus);
@@ -42,17 +44,15 @@ public class Cloche{
 
     }
 
-    private void addItemToCreativeTab(BuildCreativeModeTabContentsEvent event) {
-        if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
-   //         event.accept(FlightBlocksBlocks.FLIGHT_BLOCK.get());
-        }
+    public static Identifier identifier(String path) {
+        return Identifier.fromNamespaceAndPath(MOD_ID, path);
     }
 
     public void registerCapabilities(RegisterCapabilitiesEvent event) {
-        ClocheBlockEntities.registerCapabilities(event);
+        ClocheCapabilities.registerCapabilities(event);
     }
 
-    @EventBusSubscriber(modid = Cloche.MOD_ID, bus = EventBusSubscriber.Bus.MOD ,value = Dist.CLIENT)
+    @EventBusSubscriber(modid = Cloche.MOD_ID, value = Dist.CLIENT)
     public static class ClientModEvents {
         @SubscribeEvent
         public static void registerScreens(RegisterMenuScreensEvent event) {

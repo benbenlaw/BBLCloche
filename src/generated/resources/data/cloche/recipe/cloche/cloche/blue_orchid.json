@@ -1,0 +1,14 @@
+{
+  "type": "cloche:cloche",
+  "duration": 1200,
+  "results": [
+    {
+      "item": {
+        "count": 1,
+        "id": "minecraft:blue_orchid"
+      }
+    }
+  ],
+  "seed": "minecraft:blue_orchid",
+  "soil": "#minecraft:dirt"
+}

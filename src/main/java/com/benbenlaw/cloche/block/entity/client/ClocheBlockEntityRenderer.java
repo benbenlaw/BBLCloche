@@ -1,62 +1,15 @@
 package com.benbenlaw.cloche.block.entity.client;
 
-import com.benbenlaw.cloche.block.entity.ClocheBlockEntity;
-import com.benbenlaw.core.block.brightable.BrightBlock;
-import com.benbenlaw.core.block.brightable.BrightSapling;
-import com.benbenlaw.core.block.colored.ColoredBlock;
-import com.benbenlaw.core.block.colored.util.ColorMap;
-import com.benbenlaw.core.block.colored.util.IColored;
-import com.benbenlaw.core.config.ColorTintIndexConfig;
-import com.benbenlaw.core.item.CoreDataComponents;
-import com.benbenlaw.core.util.ColorHandler;
-import com.benbenlaw.core.util.CoreTags;
-import com.benbenlaw.core.util.RenderUtil;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.item.*;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LightLayer;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.CropBlock;
-import net.minecraft.world.level.block.FarmBlock;
-import net.minecraft.world.level.block.StemBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.client.model.data.ModelData;
-import net.neoforged.neoforge.fluids.FluidType;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
+//TODO: Fix Cloche Renderer
 
-import java.util.List;
 
+/*
 public class ClocheBlockEntityRenderer implements BlockEntityRenderer<ClocheBlockEntity> {
     public ClocheBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
 
     }
 
+    /*
     @Override
     public void render(ClocheBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack,
                        MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
@@ -267,4 +220,18 @@ public class ClocheBlockEntityRenderer implements BlockEntityRenderer<ClocheBloc
 
         RenderUtil.renderFace(Direction.DOWN, pose, consumer, texture, inset, inset, 1 - inset , faceSize, faceSize, color, packedLight);
     }
+
+
+
+    @Override
+    public BlockEntityRenderState createRenderState() {
+        return null;
+    }
+
+    @Override
+    public void submit(BlockEntityRenderState blockEntityRenderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState) {
+
+    }
 }
+
+ */

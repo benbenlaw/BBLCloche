@@ -27,6 +27,6 @@ side="BOTH"
 [[dependencies."${mod_id}"]]
 modId="bblcore"
 type="required"
-versionRange="1.21-1.1.24"
+versionRange="1.21.11-1.11.1"
 ordering="NONE"
 side="BOTH"

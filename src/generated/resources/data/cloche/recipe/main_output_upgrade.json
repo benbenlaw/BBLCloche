@@ -3,17 +3,13 @@
   "category": "misc",
   "group": "cloche",
   "key": {
-    "C": {
-      "item": "minecraft:golden_carrot"
-    },
-    "U": {
-      "item": "bblcore:upgrade_base"
-    }
+    "A": "minecraft:golden_carrot",
+    "B": "bblcore:upgrade_base"
   },
   "pattern": [
-    " C ",
-    "CUC",
-    " C "
+    " A ",
+    "ABA",
+    " A "
   ],
   "result": {
     "count": 1,

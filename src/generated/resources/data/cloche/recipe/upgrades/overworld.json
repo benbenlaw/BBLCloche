@@ -1,7 +1,0 @@
-{
-  "type": "cloche:dimensional_upgrade",
-  "dimension": "minecraft:overworld",
-  "ingredient": {
-    "item": "cloche:overworld_upgrade"
-  }
-}

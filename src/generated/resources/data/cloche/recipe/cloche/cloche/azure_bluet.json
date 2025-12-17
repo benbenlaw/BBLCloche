@@ -1,0 +1,14 @@
+{
+  "type": "cloche:cloche",
+  "duration": 1200,
+  "results": [
+    {
+      "item": {
+        "count": 1,
+        "id": "minecraft:azure_bluet"
+      }
+    }
+  ],
+  "seed": "minecraft:azure_bluet",
+  "soil": "#minecraft:dirt"
+}

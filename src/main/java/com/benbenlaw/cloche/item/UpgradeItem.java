@@ -1,12 +1,15 @@
 package com.benbenlaw.cloche.item;
 
-import com.benbenlaw.core.item.TooltipUtil;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public class UpgradeItem extends Item {
     private final String tooltip;
@@ -16,8 +19,13 @@ public class UpgradeItem extends Item {
         this.tooltip = tooltip;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> list, TooltipFlag flag) {
-        TooltipUtil.addShiftTooltip(list, tooltip);
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull TooltipDisplay display, @NotNull Consumer<Component> consumer, TooltipFlag flag) {
+        if (Minecraft.getInstance().hasShiftDown()) {
+            consumer.accept(Component.translatable(tooltip).withStyle(ChatFormatting.BLUE));
+        } else {
+            consumer.accept(Component.translatable("tooltip.bblcore.shift").withStyle(ChatFormatting.YELLOW));
+        }
     }
 }

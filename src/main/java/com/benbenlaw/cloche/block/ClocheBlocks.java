@@ -1,13 +1,14 @@
 package com.benbenlaw.cloche.block;
 
 import com.benbenlaw.cloche.Cloche;
+import com.benbenlaw.cloche.block.custom.ClocheBlock;
 import com.benbenlaw.cloche.item.ClocheItems;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -19,11 +20,8 @@ public class ClocheBlocks {
 
 
     public static final DeferredBlock<Block> CLOCHE = registerBlock("cloche",
-            () -> new ClocheBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).noOcclusion()));
-
-
-
-
+            () -> new ClocheBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE)
+                    .noOcclusion().setId(createID("cloche"))));
 
 
 
@@ -34,13 +32,11 @@ public class ClocheBlocks {
     }
 
     private static <T extends Block> void registerBlockItem(String name, DeferredBlock<T> block) {
-        ClocheItems.ITEMS.register(name, () -> new BlockItem(block.get(),
-                new Item.Properties()));
-
+        ClocheItems.ITEMS.registerItem(name, (properties) -> new BlockItem(block.get(), properties.useBlockDescriptionPrefix()));
     }
 
-    public static void register(IEventBus eventBus) {
-        BLOCKS.register(eventBus);
+    public static ResourceKey<Block> createID(String name) {
+        return ResourceKey.create(Registries.BLOCK, Cloche.identifier(name));
     }
 
 }

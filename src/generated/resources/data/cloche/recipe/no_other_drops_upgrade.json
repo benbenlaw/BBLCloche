@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "cloche:no_seeds_upgrade"
-    },
-    {
-      "item": "cloche:main_output_upgrade"
-    }
+    "cloche:no_seeds_upgrade",
+    "cloche:main_output_upgrade"
   ],
   "result": {
     "count": 1,
