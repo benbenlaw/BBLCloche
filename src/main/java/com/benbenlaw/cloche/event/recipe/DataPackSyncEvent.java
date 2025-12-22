@@ -37,6 +37,5 @@ public class DataPackSyncEvent {
         }
 
         ClocheRecipeCache.setRecipe(clocheRecipeMap);
-
     }
 }
