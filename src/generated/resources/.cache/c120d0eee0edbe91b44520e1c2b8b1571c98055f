@@ -1,4 +1,4 @@
-// 1.21.11	2025-12-17T13:06:58.5621038	cloche Recipes
+// 1.21.11	2025-12-22T18:18:40.280153	cloche Recipes
 18394310e6161e2d784ded251ef1476b1bc4cbfd data/cloche/advancement/recipes/cloche/cloche/cloche/acacia_sapling.json
 c1aa446f03b53db42f75a87eda7d668d649bbe7f data/cloche/advancement/recipes/cloche/cloche/cloche/allium.json
 2bc69bb8e5cac7c93926ec22ca88ca3b768bbcef data/cloche/advancement/recipes/cloche/cloche/cloche/azure_bluet.json
@@ -11,12 +11,14 @@ e34c37f0ce2af282dc16e11ffaed8d6cd18b8f20 data/cloche/advancement/recipes/cloche/
 66e0eb9cf19be5af5cc8efc009edebe69c63b996 data/cloche/advancement/recipes/cloche/cloche/cloche/carrot.json
 836a8ab619b79fe9b994dbcb33bd3938b97edb4b data/cloche/advancement/recipes/cloche/cloche/cloche/cherry_sapling.json
 500b279561b231ab78a21ac425bcc8bed5ee4384 data/cloche/advancement/recipes/cloche/cloche/cloche/chorus_fruit.json
+ab18bde1f402443b26f5609729f919dabdae6e83 data/cloche/advancement/recipes/cloche/cloche/cloche/closed_eyeblossom.json
 854fcccc73b9a760a83dae9cd03c9b3df7764e08 data/cloche/advancement/recipes/cloche/cloche/cloche/cocoa_beans.json
 e16905383a90f2aaa43a0872487d8daee6568568 data/cloche/advancement/recipes/cloche/cloche/cloche/cornflower.json
 844b63773f8086b6ce24d0317910aa60deb83b0f data/cloche/advancement/recipes/cloche/cloche/cloche/crimson_fungus.json
 a761dca8e30257dbe782bd41ebbf7ef9317df3d7 data/cloche/advancement/recipes/cloche/cloche/cloche/dandelion.json
 f4fb30f424dddadc8a2c457639c8e3570ab76d91 data/cloche/advancement/recipes/cloche/cloche/cloche/dark_oak_sapling.json
 88f91d3f50e88245f9da7bb17d5e6da65f999610 data/cloche/advancement/recipes/cloche/cloche/cloche/fern.json
+f7f20b7896278c60e841d76ea19df4b5a8118808 data/cloche/advancement/recipes/cloche/cloche/cloche/firefly_bush.json
 4a64132c6fd4ea873be988f6eec12fb73fa249a7 data/cloche/advancement/recipes/cloche/cloche/cloche/glow_lichen.json
 ab83c579f0c9786fa945bfdae530a83244978180 data/cloche/advancement/recipes/cloche/cloche/cloche/jungle_sapling.json
 887708af0c56aa6895c54e93139fb87ddcfaf02b data/cloche/advancement/recipes/cloche/cloche/cloche/kelp.json
@@ -27,8 +29,10 @@ a3b455b4704547f5ff48261c07eb466620bb3b70 data/cloche/advancement/recipes/cloche/
 a6b542f694d82dd3edeefba9d7b655ac7ab81423 data/cloche/advancement/recipes/cloche/cloche/cloche/melon.json
 d7f300c97bc60d6c2b02788d56010c52a42b8217 data/cloche/advancement/recipes/cloche/cloche/cloche/nether_wart.json
 cd214bb6df4aea7bd55db5e461dbe411893d99d4 data/cloche/advancement/recipes/cloche/cloche/cloche/oak_sapling.json
+fe51224e4385f4ec19161211367aef83cf311a74 data/cloche/advancement/recipes/cloche/cloche/cloche/open_eyeblossom.json
 af14a0a0223bbbd0cbb45c6ba5b606178a2356b1 data/cloche/advancement/recipes/cloche/cloche/cloche/orange_tulip.json
 4f849b17f8c21beeb33f5dc60b3115c955db24df data/cloche/advancement/recipes/cloche/cloche/cloche/oxeye_daisy.json
+366cb926033f6e7243aef0c3c39d91ae27360dde data/cloche/advancement/recipes/cloche/cloche/cloche/pale_oak_sapling.json
 33252ec740a5c1959e1302109a2e0938cc4d573e data/cloche/advancement/recipes/cloche/cloche/cloche/peony.json
 504d78a5b99501915f94b3e3f14417c30fb88851 data/cloche/advancement/recipes/cloche/cloche/cloche/pink_petals.json
 afe612fc00801cd4e89828e41216847068430269 data/cloche/advancement/recipes/cloche/cloche/cloche/pink_tulip.json
@@ -46,10 +50,12 @@ cedf570ee8d9149b8c31fc69b874d5337a9f7eb4 data/cloche/advancement/recipes/cloche/
 5424aa5b6b97be40238820d75cf36747982610a5 data/cloche/advancement/recipes/cloche/cloche/cloche/sugar_cane.json
 00dbaaf0c6b07615b047bc4d29056fdb8841d085 data/cloche/advancement/recipes/cloche/cloche/cloche/sunflower.json
 ae6932320c77288fa622ae301e4623d7c022439e data/cloche/advancement/recipes/cloche/cloche/cloche/sweet_berries.json
+dd0f7bcf07b5a87a519fd921328cf74a0176eaac data/cloche/advancement/recipes/cloche/cloche/cloche/torchflower.json
 f0fe368027c1438c1805467c08a3ecc036e27494 data/cloche/advancement/recipes/cloche/cloche/cloche/vine.json
 858643aa19b1ce023743efcf2341ea2bc7ec4c58 data/cloche/advancement/recipes/cloche/cloche/cloche/warped_fungus.json
 fdc049356f43cce6070fc71028887a701a576223 data/cloche/advancement/recipes/cloche/cloche/cloche/wheat.json
 addce35d47b303b798f31ea84e8695f46ebad4df data/cloche/advancement/recipes/cloche/cloche/cloche/white_tulip.json
+06600c762a46fa248f0bb8f5fa464a1381c27770 data/cloche/advancement/recipes/cloche/cloche/cloche/wildflowers.json
 c8d6329372b71bb7dbddd7b6b6b78059266926fe data/cloche/advancement/recipes/cloche/cloche/cloche/wither_rose.json
 90814b65a6fbc234ff47dcd10695e366043c1b22 data/cloche/advancement/recipes/misc/cloche.json
 f1d0aba8a437caa0aae1c853bfb94eb4b174a8cb data/cloche/advancement/recipes/misc/main_output_upgrade.json
@@ -65,16 +71,18 @@ b119446cecf7fde741ba7d1eb26023c1da4bfeba data/cloche/recipe/cloche/cloche/bamboo
 83cf7771e5578311948177be30745df4c5e6085c data/cloche/recipe/cloche/cloche/birch_sapling.json
 fb69e9019feac459b840570086c7cf1ce03608d9 data/cloche/recipe/cloche/cloche/blue_orchid.json
 7940314310ecf7830864a2b099d6f3d864349b8c data/cloche/recipe/cloche/cloche/brown_mushroom.json
-deb48130f056709fb021297791a177b3708d7be2 data/cloche/recipe/cloche/cloche/cactus.json
+ef24ccd33d67ad20555fdceeb40150cbf304e577 data/cloche/recipe/cloche/cloche/cactus.json
 ce97801342533d1b69f87e141a3cf726198488a1 data/cloche/recipe/cloche/cloche/carrot.json
 78034effc9412a1006793af4dd92e4a4ed7bee86 data/cloche/recipe/cloche/cloche/cherry_sapling.json
 ec786d484e0c49aa85a3e60dbabeb1523ba7135a data/cloche/recipe/cloche/cloche/chorus_fruit.json
+cb5ba7d991dc5a328fb319eb99b0716087df56f6 data/cloche/recipe/cloche/cloche/closed_eyeblossom.json
 9fcc16e0e4a0b8b8cdbdd5322c10459ff7797584 data/cloche/recipe/cloche/cloche/cocoa_beans.json
 7e96720cf314d260e382612953652582f03a46d1 data/cloche/recipe/cloche/cloche/cornflower.json
 a69306a2fa7022f4637fc6c762c59757e62cf2dd data/cloche/recipe/cloche/cloche/crimson_fungus.json
 338313198bbadffa62d45af3ffeff1c0e371d1a5 data/cloche/recipe/cloche/cloche/dandelion.json
 6ecfcd32ceba64ae8e4cd8df8985d713ffa10b2e data/cloche/recipe/cloche/cloche/dark_oak_sapling.json
 b931b2bf4756b0fe20a1d7e56bc0a41806a11a82 data/cloche/recipe/cloche/cloche/fern.json
+b58f35d3953d7b0a331b5b6b0bd841e43c0ce26d data/cloche/recipe/cloche/cloche/firefly_bush.json
 2d05bf913d912dff7fa165a10b202765f5d17fd5 data/cloche/recipe/cloche/cloche/glow_lichen.json
 375f58ffdc080f2bf8c7dc67e2be57e93df2c966 data/cloche/recipe/cloche/cloche/jungle_sapling.json
 64ef5bf6e7bdc11afb423bb9b090d43fa05253c8 data/cloche/recipe/cloche/cloche/kelp.json
@@ -85,8 +93,10 @@ d0ad0effa5c2fb64c79c6bdeefe789a450446b92 data/cloche/recipe/cloche/cloche/mangro
 b9c5609d5e1047ff869043c06d1f8d76043c4f36 data/cloche/recipe/cloche/cloche/melon.json
 b52f5c620893571bb961f487a25f1288b414ae30 data/cloche/recipe/cloche/cloche/nether_wart.json
 87be1a22730a60398e0524c506dc8bd9d074f143 data/cloche/recipe/cloche/cloche/oak_sapling.json
+c43199348efe8cd43b6a63bb7270635ee7493a85 data/cloche/recipe/cloche/cloche/open_eyeblossom.json
 89940dc0241a7df7987a4b32e14f3d2c86d1a5f1 data/cloche/recipe/cloche/cloche/orange_tulip.json
 5bcf05713581737faec9645006e2cafaf2b32497 data/cloche/recipe/cloche/cloche/oxeye_daisy.json
+2c1a59934e74619c59cee7a9eeb93750366d0f32 data/cloche/recipe/cloche/cloche/pale_oak_sapling.json
 c0d16ba558ca7d56b2028a3000c070883b45895f data/cloche/recipe/cloche/cloche/peony.json
 3155e54a8879d1f4e0d6f6c0468171869ba5a81b data/cloche/recipe/cloche/cloche/pink_petals.json
 3e5edf4c8104e1164f0b4daa908bcfb57f5ed4a2 data/cloche/recipe/cloche/cloche/pink_tulip.json
@@ -104,10 +114,12 @@ c804e0a38aacea0826f13b0338a2ad43a9d7402b data/cloche/recipe/cloche/cloche/spruce
 a0e480ffe3624d1afa64f4e4417a31b3e47cb9e7 data/cloche/recipe/cloche/cloche/sugar_cane.json
 1ab89e4633faade457e53a7bada41c5b173f1079 data/cloche/recipe/cloche/cloche/sunflower.json
 76af0cd526baebe2573ded9fa8ad9c0ea1f9da7d data/cloche/recipe/cloche/cloche/sweet_berries.json
+5e440054a4ddee84d904b55c4a14d79d8d10bd42 data/cloche/recipe/cloche/cloche/torchflower.json
 44dfddd94ab54fc59ef1695e14f5261b81411c20 data/cloche/recipe/cloche/cloche/vine.json
 a1f3ca9170ba23a6f1e9c85acb56ac387bcfa1fe data/cloche/recipe/cloche/cloche/warped_fungus.json
 2120a33a7fd55b067c53072153d64f548f839aa5 data/cloche/recipe/cloche/cloche/wheat.json
 495c59e2cb84d1788d1e290d5c7c997238f8b456 data/cloche/recipe/cloche/cloche/white_tulip.json
+d8d84fc79b126028a25cbda84bcf18eacda10ebe data/cloche/recipe/cloche/cloche/wildflowers.json
 f6bbfdc47686a840991badd30b429f1b743d9e4b data/cloche/recipe/cloche/cloche/wither_rose.json
 dbe52dbd38bdb3d6d6c15376f75508054af63663 data/cloche/recipe/main_output_upgrade.json
 c5210b4d0ee99ca0d40195b1733b6123f8e2ab99 data/cloche/recipe/no_other_drops_upgrade.json

@@ -181,6 +181,16 @@ public class ClocheRecipesProvider extends RecipeProvider {
                         null, 1200, ResultLists.WARPED_FUNGUS_RESULTS, null)
                 .save(output, "cloche/warped_fungus");
 
+        //Pale Oak Sapling
+        ClocheRecipeProvider.ClocheRecipeBuilder(Ingredient.of(Items.PALE_OAK_SAPLING), tag(ItemTags.DIRT),
+                        null, 1200, ResultLists.PALE_OAK_SAPLING_RESULTS, new ItemStack(Items.PALE_OAK_LEAVES, 2))
+                .save(output, "cloche/pale_oak_sapling");
+
+        //Cactus
+        ClocheRecipeProvider.ClocheRecipeBuilder(Ingredient.of(Items.CACTUS), tag(ItemTags.DIRT),
+                        null, 1200, ResultLists.CACTUS_RESULTS, null)
+                .save(output, "cloche/cactus");
+
         // Single Item Recipes
         createSingleItemRecipe(new ItemStack(Items.DANDELION), tag(ItemTags.DIRT), 1200, "dandelion", output);
         createSingleItemRecipe(new ItemStack(Items.POPPY), tag(ItemTags.DIRT), 1200, "poppy", output);
@@ -212,12 +222,16 @@ public class ClocheRecipesProvider extends RecipeProvider {
         createSingleItemRecipe(new ItemStack(Items.COCOA_BEANS), tag(ItemTags.JUNGLE_LOGS), 1200, "cocoa_beans", output);
         createSingleItemRecipe(new ItemStack(Items.BAMBOO), tag(ItemTags.DIRT), 1200, "bamboo", output);
         createSingleItemRecipe(new ItemStack(Items.SUGAR_CANE), tag(ItemTags.DIRT), 1200, "sugar_cane", output);
-        createSingleItemRecipe(new ItemStack(Items.CACTUS), tag(ItemTags.SAND), 1200, "cactus", output);
         createSingleItemRecipe(new ItemStack(Items.SWEET_BERRIES), tag(ItemTags.DIRT), 1200, "sweet_berries", output);
         createSingleItemRecipe(new ItemStack(Items.NETHER_WART), Ingredient.of(Items.SOUL_SAND), 1200, "nether_wart", output);
         createSingleItemRecipe(new ItemStack(Items.CARROT), tag(ItemTags.DIRT), 1200, "carrot", output);
         createSingleItemRecipe(new ItemStack(Items.BROWN_MUSHROOM), tag(ItemTags.DIRT), 1200, "brown_mushroom", output);
         createSingleItemRecipe(new ItemStack(Items.RED_MUSHROOM), tag(ItemTags.DIRT), 1200, "red_mushroom", output);
+        createSingleItemRecipe(new ItemStack(Items.FIREFLY_BUSH), tag(ItemTags.DIRT), 1200, "firefly_bush", output);
+        createSingleItemRecipe(new ItemStack(Items.TORCHFLOWER), tag(ItemTags.DIRT), 1200, "torchflower", output);
+        createSingleItemRecipe(new ItemStack(Items.CLOSED_EYEBLOSSOM), tag(ItemTags.DIRT), 1200, "closed_eyeblossom", output);
+        createSingleItemRecipe(new ItemStack(Items.OPEN_EYEBLOSSOM), tag(ItemTags.DIRT), 1200, "open_eyeblossom", output);
+        createSingleItemRecipe(new ItemStack(Items.WILDFLOWERS), tag(ItemTags.DIRT), 1200, "wildflowers", output);
     }
 
     public void createSingleItemRecipe(ItemStack item, Ingredient soil, int duration, String name, RecipeOutput consumer) {

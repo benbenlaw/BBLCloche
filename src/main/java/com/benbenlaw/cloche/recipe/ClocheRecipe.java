@@ -152,10 +152,5 @@ public record ClocheRecipe (Ingredient seed, Ingredient soil, Optional<Ingredien
         }
         return results;
     }
-
-
-
-
-
 }
 

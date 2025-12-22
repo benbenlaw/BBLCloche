@@ -30,6 +30,13 @@ public class ClocheLangProvider extends LanguageProvider {
         add("tooltip.upgrade.shears", "Add the Shears drop to the outputs");
         add("tooltip.upgrade.no_other_drops", "Prevents all other drops except the main output");
 
+        //JEI
+        add("jei.cloche.chance", "Chance: %s");
+        add("jei.cloche.main_output", "Effected by Main Output Upgrade");
+        add("jei.cloche.shears_result", "Drop added by Shears Upgrade");
+        add("jei.cloche.seeds_results", "Removed by No Seeds Upgrade");
+
+
     }
 
     @Override

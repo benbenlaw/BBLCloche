@@ -3,12 +3,20 @@
   "duration": 1200,
   "results": [
     {
+      "chance": 0.9,
       "item": {
         "count": 1,
         "id": "minecraft:cactus"
       }
+    },
+    {
+      "chance": 0.1,
+      "item": {
+        "count": 1,
+        "id": "minecraft:cactus_flower"
+      }
     }
   ],
   "seed": "minecraft:cactus",
-  "soil": "#minecraft:sand"
+  "soil": "#minecraft:dirt"
 }
