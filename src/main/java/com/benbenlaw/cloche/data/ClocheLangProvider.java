@@ -25,10 +25,16 @@ public class ClocheLangProvider extends LanguageProvider {
         add("item.cloche.no_other_drops_upgrade", "No Other Drops Upgrade");
 
         //Tooltips - Info
-        add("tooltip.upgrade.no_seeds", "Prevents seeds from being produced");
-        add("tooltip.upgrade.main_output", "Increases the main output by 1");
-        add("tooltip.upgrade.shears", "Add the Shears drop to the outputs");
-        add("tooltip.upgrade.no_other_drops", "Prevents all other drops except the main output");
+        add("tooltip.cloche.no_seeds_upgrade", "Prevents seeds from being produced");
+        add("tooltip.cloche.main_output_upgrade", "Doubles the main output (Stacks with other Main Output Upgrades)");
+        add("tooltip.cloche.shears_upgrade", "Add the Shears drop to the outputs");
+        add("tooltip.cloche.no_other_drops_upgrade", "Prevents all other drops except the main output");
+        add("tooltip.cloche.seed_slot", "Seed Slot");
+        add("tooltip.cloche.soil_slot", "Soil Slot");
+        add("tooltip.cloche.upgrade_slot", "Upgrade Slot");
+        add("tooltip.cloche.catalyst_slot_no_catalysts", "No Catalysts Required");
+        add("tooltip.cloche.catalyst_slot", "Catalysts Slot");
+        add("tooltip.cloche.cloche", "Prevents all other drops except the main output");
 
         //JEI
         add("jei.cloche.chance", "Chance: %s");

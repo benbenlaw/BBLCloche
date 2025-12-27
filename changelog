@@ -2,6 +2,14 @@ Changelog BBL Cloche
 
 //TODO Upgrades and JEI Abstract plugin classes to BBL Core
 
+1.6.2
+- Returned shift click support to the cloche inventory
+- Fixed recipes continuing to run when soil is removed
+- Migrated to ItemTooltipEvent instead of overriding deprecated method for tooltips
+- Re enabled slot tooltips
+- Fixed outputs not starting a new slot when the same item has already made a stack
+- Re enabled upgrades
+
 1.6.1
 - Re added JEI integration now that JEI for 1.21.1
 - Tweaked Cactus recipe by adding the cactus flower as a drop chance

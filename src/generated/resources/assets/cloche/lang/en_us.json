@@ -5,12 +5,18 @@
   "item.cloche.no_seeds_upgrade": "No Seeds Upgrade",
   "item.cloche.shears_upgrade": "Shears Upgrade",
   "itemGroup.cloche": "Cloche",
-  "jei.cloche.chance": "Chance: %s%%",
+  "jei.cloche.chance": "Chance: %s",
   "jei.cloche.main_output": "Effected by Main Output Upgrade",
   "jei.cloche.seeds_results": "Removed by No Seeds Upgrade",
   "jei.cloche.shears_result": "Drop added by Shears Upgrade",
-  "tooltip.upgrade.main_output": "Increases the main output by 1",
-  "tooltip.upgrade.no_other_drops": "Prevents all other drops except the main output",
-  "tooltip.upgrade.no_seeds": "Prevents seeds from being produced",
-  "tooltip.upgrade.shears": "Add the Shears drop to the outputs"
+  "tooltip.cloche.catalyst_slot": "Catalysts Slot",
+  "tooltip.cloche.catalyst_slot_no_catalysts": "No Catalysts Required",
+  "tooltip.cloche.cloche": "Prevents all other drops except the main output",
+  "tooltip.cloche.main_output_upgrade": "Doubles the main output (Stacks with other Main Output Upgrades)",
+  "tooltip.cloche.no_other_drops_upgrade": "Prevents all other drops except the main output",
+  "tooltip.cloche.no_seeds_upgrade": "Prevents seeds from being produced",
+  "tooltip.cloche.seed_slot": "Seed Slot",
+  "tooltip.cloche.shears_upgrade": "Add the Shears drop to the outputs",
+  "tooltip.cloche.soil_slot": "Soil Slot",
+  "tooltip.cloche.upgrade_slot": "Upgrade Slot"
 }

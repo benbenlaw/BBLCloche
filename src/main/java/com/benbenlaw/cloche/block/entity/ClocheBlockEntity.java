@@ -2,6 +2,7 @@ package com.benbenlaw.cloche.block.entity;
 
 import com.benbenlaw.cloche.block.ClocheBlockEntities;
 import com.benbenlaw.cloche.block.custom.ClocheBlock;
+import com.benbenlaw.cloche.item.ClocheItems;
 import com.benbenlaw.cloche.recipe.ClocheRecipe;
 import com.benbenlaw.cloche.recipe.ClocheRecipes;
 import com.benbenlaw.cloche.recipe.custom.ClocheRecipeInput;
@@ -9,6 +10,7 @@ import com.benbenlaw.cloche.screen.cloche.ClocheMenu;
 import com.benbenlaw.core.block.entity.SyncableBlockEntity;
 import com.benbenlaw.core.block.entity.handler.item.InputItemHandler;
 import com.benbenlaw.core.block.entity.handler.item.OutputItemHandler;
+import com.benbenlaw.core.recipe.ChanceResult;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -17,7 +19,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -27,6 +31,7 @@ import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ClocheBlockEntity extends SyncableBlockEntity implements MenuProvider {
@@ -44,8 +49,13 @@ public class ClocheBlockEntity extends SyncableBlockEntity implements MenuProvid
     public static final int[] OUTPUT_SLOTS = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
 
     private final InputItemHandler inputHandler = new InputItemHandler(this, 3,
-            (i, stack) -> i == SEED_SLOT || i == SOIL_SLOT || i == CATALYST_SLOT
-    );
+            (i, stack) -> i == SEED_SLOT || i == SOIL_SLOT || i == CATALYST_SLOT) {
+        @Override
+        protected void onContentsChanged(int index, ItemStack previousContents) {
+            updateCachedRecipe();
+            super.onContentsChanged(index, previousContents);
+        }
+    };
 
     private final InputItemHandler upgradeHandler = new InputItemHandler(this, 3,
             (i, stack) -> i == UPGRADE_SLOT_1 || i == UPGRADE_SLOT_2 || i == UPGRADE_SLOT_3
@@ -91,15 +101,6 @@ public class ClocheBlockEntity extends SyncableBlockEntity implements MenuProvid
             return;
         }
 
-        ItemStack inputStack = inputHandler.getResource(SEED_SLOT).toStack();
-
-        if (inputStack.isEmpty()) {
-            progress = 0;
-            sync();
-            cachedRecipe = null;
-            return;
-        }
-
         if (cachedRecipe == null) {
             updateCachedRecipe();
         }
@@ -112,8 +113,6 @@ public class ClocheBlockEntity extends SyncableBlockEntity implements MenuProvid
             progress = 0;
             sync();
         }
-
-
     }
 
     private int findOutputSlot(ItemStack output) {
@@ -136,17 +135,58 @@ public class ClocheBlockEntity extends SyncableBlockEntity implements MenuProvid
         if (cachedRecipe == null || level == null) return;
 
         ClocheRecipe recipe = cachedRecipe.value();
-        List<ItemStack> outputs = recipe.rollResults(level.random);
+        List<ItemStack> outputs = new ArrayList<>(recipe.rollResults(level.random));
 
-        if (!canInsertOutputs(outputs)) return;
+        boolean hasNoSeedUpgrade = hasUpgrade(ClocheItems.NO_SEEDS_UPGRADE.get());
+        boolean hasShearsUpgrade = hasUpgrade(ClocheItems.SHEARS_UPGRADE.get());
+        boolean hasNoOtherDropsUpgrade = hasUpgrade(ClocheItems.NO_OTHER_DROPS_UPGRADE.get());
+
+        int mainOutputUpgradeCount = countUpgrade(ClocheItems.MAIN_OUTPUT_UPGRADE.get());
+
+        if (hasNoOtherDropsUpgrade) {
+            ChanceResult onlyMain = recipe.getRollResults().getFirst();
+            outputs.clear();
+            outputs.add(onlyMain.stack().copy());
+        } else {
+
+            if (hasNoSeedUpgrade) {
+                Ingredient seed = recipe.seed();
+                outputs.removeIf(seed::test);
+            }
+
+            if (mainOutputUpgradeCount > 0 && !outputs.isEmpty()) {
+                ItemStack main = outputs.getFirst();
+                int multiplier = 1 << mainOutputUpgradeCount;
+                main.setCount(main.getCount() * multiplier);
+            }
+
+            if (hasShearsUpgrade) {
+                ItemStack shearsResult = recipe.shearsResult();
+                if (!shearsResult.isEmpty()) {
+                    outputs.add(shearsResult.copy());
+                }
+            }
+        }
 
         try (Transaction tx = Transaction.open(null)) {
             for (ItemStack stack : outputs) {
-                int slot = findOutputSlot(stack);
-                if (slot == -1) continue;
+                int remaining = stack.getCount();
 
-                outputHandler.insertInternal(slot, ItemResource.of(stack), stack.getCount(),tx);
+                for (int i = 0; i < outputHandler.size() && remaining > 0; i++) {
+                    int inserted = outputHandler.insertInternalReturn(
+                            i,
+                            ItemResource.of(stack),
+                            remaining,
+                            tx
+                    );
+                    remaining -= inserted;
+                }
+
+                if (remaining > 0) {
+                    return;
+                }
             }
+
             tx.commit();
         }
 
@@ -154,7 +194,30 @@ public class ClocheBlockEntity extends SyncableBlockEntity implements MenuProvid
         sync();
     }
 
+    private boolean hasUpgrade(ItemLike upgrade) {
+        ItemResource upgradeResource = ItemResource.of(upgrade);
+        for (int i = 0; i < upgradeHandler.size(); i++) {
+            ItemStack stack = upgradeHandler.getResource(i).toStack();
+            if (!stack.isEmpty() && upgradeResource.matches(stack)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
+    private int countUpgrade(ItemLike upgrade) {
+        ItemResource resource = ItemResource.of(upgrade);
+        int count = 0;
+
+        for (int i = 0; i < upgradeHandler.size(); i++) {
+            ItemStack stack = upgradeHandler.getResource(i).toStack();
+            if (!stack.isEmpty() && resource.matches(stack)) {
+                count += stack.getCount();
+            }
+        }
+
+        return count;
+    }
 
     private boolean canInsertOutputs(List<ItemStack> outputs) {
         for (ItemStack stack : outputs) {
