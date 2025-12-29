@@ -32,7 +32,7 @@ public class ClocheLangProvider extends LanguageProvider {
         add("tooltip.cloche.seed_slot", "Seed Slot");
         add("tooltip.cloche.soil_slot", "Soil Slot");
         add("tooltip.cloche.upgrade_slot", "Upgrade Slot");
-        add("tooltip.cloche.catalyst_slot_no_catalysts", "No Catalysts Required");
+        add("tooltip.cloche.catalyst_slot_no_catalysts", "No loaded recipes use catalysts");
         add("tooltip.cloche.catalyst_slot", "Catalysts Slot");
         add("tooltip.cloche.cloche", "Prevents all other drops except the main output");
 

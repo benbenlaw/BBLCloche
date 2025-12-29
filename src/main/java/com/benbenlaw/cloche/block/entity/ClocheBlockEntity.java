@@ -105,7 +105,9 @@ public class ClocheBlockEntity extends SyncableBlockEntity implements MenuProvid
             updateCachedRecipe();
         }
 
-        if (cachedRecipe != null && canInsertOutputs(cachedRecipe.value().getResults())) {
+        List<ItemStack> outputs = getActualOutputs(cachedRecipe.value());
+
+        if (cachedRecipe != null && canInsertOutputs(outputs)) {
             maxProgress = cachedRecipe.value().duration();
             progress++;
             if (progress >= maxProgress) craftItem();
@@ -135,38 +137,7 @@ public class ClocheBlockEntity extends SyncableBlockEntity implements MenuProvid
         if (cachedRecipe == null || level == null) return;
 
         ClocheRecipe recipe = cachedRecipe.value();
-        List<ItemStack> outputs = new ArrayList<>(recipe.rollResults(level.random));
-
-        boolean hasNoSeedUpgrade = hasUpgrade(ClocheItems.NO_SEEDS_UPGRADE.get());
-        boolean hasShearsUpgrade = hasUpgrade(ClocheItems.SHEARS_UPGRADE.get());
-        boolean hasNoOtherDropsUpgrade = hasUpgrade(ClocheItems.NO_OTHER_DROPS_UPGRADE.get());
-
-        int mainOutputUpgradeCount = countUpgrade(ClocheItems.MAIN_OUTPUT_UPGRADE.get());
-
-        if (hasNoOtherDropsUpgrade) {
-            ChanceResult onlyMain = recipe.getRollResults().getFirst();
-            outputs.clear();
-            outputs.add(onlyMain.stack().copy());
-        } else {
-
-            if (hasNoSeedUpgrade) {
-                Ingredient seed = recipe.seed();
-                outputs.removeIf(seed::test);
-            }
-
-            if (mainOutputUpgradeCount > 0 && !outputs.isEmpty()) {
-                ItemStack main = outputs.getFirst();
-                int multiplier = 1 << mainOutputUpgradeCount;
-                main.setCount(main.getCount() * multiplier);
-            }
-
-            if (hasShearsUpgrade) {
-                ItemStack shearsResult = recipe.shearsResult();
-                if (!shearsResult.isEmpty()) {
-                    outputs.add(shearsResult.copy());
-                }
-            }
-        }
+        List<ItemStack> outputs = getActualOutputs(recipe);
 
         try (Transaction tx = Transaction.open(null)) {
             for (ItemStack stack : outputs) {
@@ -194,6 +165,41 @@ public class ClocheBlockEntity extends SyncableBlockEntity implements MenuProvid
         sync();
     }
 
+    private List<ItemStack> getActualOutputs(ClocheRecipe recipe) {
+        List<ItemStack> outputs = new ArrayList<>(recipe.rollResults(level.random));
+
+        boolean hasNoSeedUpgrade = hasUpgrade(ClocheItems.NO_SEEDS_UPGRADE.get());
+        boolean hasShearsUpgrade = hasUpgrade(ClocheItems.SHEARS_UPGRADE.get());
+        boolean hasNoOtherDropsUpgrade = hasUpgrade(ClocheItems.NO_OTHER_DROPS_UPGRADE.get());
+        int mainOutputUpgradeCount = countUpgrade(ClocheItems.MAIN_OUTPUT_UPGRADE.get());
+
+        if (hasNoOtherDropsUpgrade) {
+            outputs.clear();
+            outputs.add(recipe.getRollResults().getFirst().stack().copy());
+            return outputs;
+        }
+
+        if (hasNoSeedUpgrade) {
+            Ingredient seed = recipe.seed();
+            outputs.removeIf(seed::test);
+        }
+
+        if (mainOutputUpgradeCount > 0 && !outputs.isEmpty()) {
+            ItemStack main = outputs.getFirst();
+            main.setCount(main.getCount() * (1 << mainOutputUpgradeCount));
+        }
+
+        if (hasShearsUpgrade) {
+            ItemStack shears = recipe.shearsResult();
+            if (!shears.isEmpty()) {
+                outputs.add(shears.copy());
+            }
+        }
+
+        return outputs;
+    }
+
+
     private boolean hasUpgrade(ItemLike upgrade) {
         ItemResource upgradeResource = ItemResource.of(upgrade);
         for (int i = 0; i < upgradeHandler.size(); i++) {
@@ -220,13 +226,28 @@ public class ClocheBlockEntity extends SyncableBlockEntity implements MenuProvid
     }
 
     private boolean canInsertOutputs(List<ItemStack> outputs) {
-        for (ItemStack stack : outputs) {
-            if (findOutputSlot(stack) == -1) {
-                return false;
+        try (Transaction tx = Transaction.open(null)) {
+            for (ItemStack stack : outputs) {
+                int remaining = stack.getCount();
+
+                for (int i = 0; i < outputHandler.size() && remaining > 0; i++) {
+                    int inserted = outputHandler.insertInternalReturn(
+                            i,
+                            ItemResource.of(stack),
+                            remaining,
+                            tx
+                    );
+                    remaining -= inserted;
+                }
+
+                if (remaining > 0) {
+                    return false;
+                }
             }
+            return true;
         }
-        return true;
     }
+
 
     private void updateCachedRecipe() {
         if (level != null && level.getServer() != null) {

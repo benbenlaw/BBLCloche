@@ -8,6 +8,7 @@ import com.benbenlaw.core.recipe.ChanceResult;
 import com.benbenlaw.core.util.MouseUtil;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -19,8 +20,11 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
@@ -144,16 +148,15 @@ public class ClocheRecipeCategory implements IRecipeCategory<ClocheRecipe> {
     }
 
     @Override
-    public void draw(ClocheRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
-
-        background.draw(guiGraphics);
-
+    public void getTooltip(ITooltipBuilder tooltip, ClocheRecipe recipe, IRecipeSlotsView slots, double mouseX, double mouseY) {
         if (MouseUtil.isMouseAboveArea((int) mouseX, (int) mouseY, 0, 0, 19, 10, 16, 16)) {
-            Font font = Minecraft.getInstance().font;
-            int duration = recipe.duration();
-            //guiGraphics.renderTooltip(font, Component.translatable("block.cloche.jei.duration", duration), 2 + (int) mouseX, 6 + (int) mouseY);
+            tooltip.add(Component.translatable("tooltip.core.ticks", recipe.duration()));
         }
+    }
 
+    @Override
+    public void draw(ClocheRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+        background.draw(guiGraphics);
         IRecipeCategory.super.draw(recipe, recipeSlotsView, guiGraphics, mouseX, mouseY);
     }
 }

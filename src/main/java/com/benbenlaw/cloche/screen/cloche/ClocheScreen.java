@@ -1,6 +1,8 @@
 package com.benbenlaw.cloche.screen.cloche;
 
 import com.benbenlaw.cloche.Cloche;
+import com.benbenlaw.core.Core;
+import com.benbenlaw.core.screen.util.DurationTooltip;
 import com.benbenlaw.core.screen.util.TooltipArea;
 import com.benbenlaw.core.util.MouseUtil;
 import net.minecraft.client.gui.GuiGraphics;
@@ -19,7 +21,7 @@ import java.util.List;
 
 public class ClocheScreen extends AbstractContainerScreen<ClocheMenu> {
     private static final Identifier TEXTURE = Cloche.identifier("textures/gui/cloche.png");
-    private static final Identifier PROGRESS_ARROW = Cloche.identifier("progress_arrow");
+    private static final Identifier PROGRESS_ARROW = Core.identifier("progress_arrow");
 
     public ClocheScreen(ClocheMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -51,6 +53,7 @@ public class ClocheScreen extends AbstractContainerScreen<ClocheMenu> {
         super.render(guiGraphics, mouseX, mouseY, delta);
         renderTooltip(guiGraphics, mouseX, mouseY);
         renderSlotTooltips(guiGraphics, mouseX, mouseY, x, y);
+        DurationTooltip.renderDurationTooltip(guiGraphics, mouseX, mouseY, x, y, 155, 5, menu.data.get(0), menu.data.get(1));
     }
 
     private void renderSlotTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY, int x, int y) {
@@ -79,5 +82,6 @@ public class ClocheScreen extends AbstractContainerScreen<ClocheMenu> {
             }
         }
     }
+
 
 }

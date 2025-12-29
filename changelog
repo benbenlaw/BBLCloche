@@ -2,6 +2,11 @@ Changelog BBL Cloche
 
 //TODO Upgrades and JEI Abstract plugin classes to BBL Core
 
+1.6.3
+- Progress now stops when the outputs are full based on the outputs that it would make
+- Cloche Screen now shows duration
+- JEI now shows duration in recipes
+
 1.6.2
 - Returned shift click support to the cloche inventory
 - Fixed recipes continuing to run when soil is removed
@@ -38,8 +43,8 @@ If no catalyst is needed the recipe no longer asks for a catalyst
 In JEI recipe durations now show when hovering over the + in the recipe
 
 1.3.2
-Increase cloche performance by reducing the number of sync calls significantly
-Updated some texture thanks @Yuki
+- Increase cloche performance by reducing the number of sync calls significantly
+- Updated some texture thanks @Yuki
 
 1.3.1
 Fixed jungle sapling not dropping leaves (RUN DATA)
