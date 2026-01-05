@@ -4,6 +4,7 @@ import com.benbenlaw.cloche.block.ClocheBlockEntities;
 import com.benbenlaw.cloche.block.ClocheBlocks;
 import com.benbenlaw.cloche.block.ClocheCapabilities;
 import com.benbenlaw.cloche.item.ClocheCreativeTab;
+import com.benbenlaw.cloche.item.ClocheDataComponent;
 import com.benbenlaw.cloche.item.ClocheItems;
 import com.benbenlaw.cloche.networking.ClocheMessages;
 import com.benbenlaw.cloche.recipe.ClocheRecipes;
@@ -33,6 +34,7 @@ public class Cloche{
         ClocheBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         ClocheCreativeTab.CREATIVE_MODE_TABS.register(modEventBus);
         ClocheItems.ITEMS.register(modEventBus);
+        ClocheDataComponent.COMPONENTS.register(modEventBus);
         ClocheRecipes.SERIALIZER.register(modEventBus);
         ClocheRecipes.TYPES.register(modEventBus);
         ClocheMenus.MENUS.register(modEventBus);

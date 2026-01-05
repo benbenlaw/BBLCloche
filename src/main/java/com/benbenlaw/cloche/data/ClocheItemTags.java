@@ -24,6 +24,7 @@ public class ClocheItemTags extends ItemTagsProvider {
         tag(ClocheTags.Items.UPGRADES).add(ClocheItems.NO_OTHER_DROPS_UPGRADE.get());
         tag(ClocheTags.Items.UPGRADES).add(ClocheItems.SHEARS_UPGRADE.get());
         tag(ClocheTags.Items.UPGRADES).add(ClocheItems.MAIN_OUTPUT_UPGRADE.get());
+        tag(ClocheTags.Items.UPGRADES).add(ClocheItems.MUTATION_UPGRADE.get());
     }
 
     @Override

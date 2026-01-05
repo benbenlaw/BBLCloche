@@ -2,6 +2,15 @@ Changelog BBL Cloche
 
 //TODO Upgrades and JEI Abstract plugin classes to BBL Core
 
+1.7.0
+- Added Mutation Upgrade, Has a 25% chance to mutate the input seed, Mutation make the crops grow faster and produce more
+- Added CropData internal system that handles mutations on crops
+- Mutation Upgrades work for any crop, seed or sapling that can be used in a recipe
+- Drop Data saved to the Item meaning you can move crops between cloches and retain mutation data
+- Mutations include growth speed and output rolls
+- 100/100 output guarantees an extra roll on outputs
+- 100/100 speed reduces a recipe duration by 100% min 10 ticks
+
 1.6.3
 - Progress now stops when the outputs are full based on the outputs that it would make
 - Cloche Screen now shows duration

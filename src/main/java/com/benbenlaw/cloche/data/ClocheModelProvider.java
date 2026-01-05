@@ -40,6 +40,7 @@ public class ClocheModelProvider extends ModelProvider {
         itemModels.generateFlatItem(ClocheItems.NO_OTHER_DROPS_UPGRADE.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(ClocheItems.MAIN_OUTPUT_UPGRADE.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(ClocheItems.SHEARS_UPGRADE.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ClocheItems.MUTATION_UPGRADE.get(), ModelTemplates.FLAT_ITEM);
 
         //Blocks
         createMachineBlock(ClocheBlocks.CLOCHE.get(), blockModels.blockStateOutput, blockModels.modelOutput);

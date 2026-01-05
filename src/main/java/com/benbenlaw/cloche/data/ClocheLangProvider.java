@@ -23,12 +23,16 @@ public class ClocheLangProvider extends LanguageProvider {
         add("item.cloche.main_output_upgrade", "Main Output Upgrade");
         add("item.cloche.shears_upgrade", "Shears Upgrade");
         add("item.cloche.no_other_drops_upgrade", "No Other Drops Upgrade");
+        add("item.cloche.mutation_upgrade", "Mutation Upgrade");
 
         //Tooltips - Info
         add("tooltip.cloche.no_seeds_upgrade", "Prevents seeds from being produced");
         add("tooltip.cloche.main_output_upgrade", "Doubles the main output (Stacks with other Main Output Upgrades)");
         add("tooltip.cloche.shears_upgrade", "Add the Shears drop to the outputs");
         add("tooltip.cloche.no_other_drops_upgrade", "Prevents all other drops except the main output");
+        add("tooltip.cloche.mutation_upgrade", "Has a 25% chance to mutate the input seed! Mutation make the crops grow faster and produce more!");
+        add("tooltip.cloche.mutation_upgrade_speed", "Reduces growth time by %s%%");
+        add("tooltip.cloche.mutation_upgrade_output", "Give a %s%% chance to roll results again");
         add("tooltip.cloche.seed_slot", "Seed Slot");
         add("tooltip.cloche.soil_slot", "Soil Slot");
         add("tooltip.cloche.upgrade_slot", "Upgrade Slot");

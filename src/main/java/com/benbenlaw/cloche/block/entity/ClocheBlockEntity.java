@@ -2,7 +2,9 @@ package com.benbenlaw.cloche.block.entity;
 
 import com.benbenlaw.cloche.block.ClocheBlockEntities;
 import com.benbenlaw.cloche.block.custom.ClocheBlock;
+import com.benbenlaw.cloche.item.ClocheDataComponent;
 import com.benbenlaw.cloche.item.ClocheItems;
+import com.benbenlaw.cloche.item.util.CropData;
 import com.benbenlaw.cloche.recipe.ClocheRecipe;
 import com.benbenlaw.cloche.recipe.ClocheRecipes;
 import com.benbenlaw.cloche.recipe.custom.ClocheRecipeInput;
@@ -103,34 +105,21 @@ public class ClocheBlockEntity extends SyncableBlockEntity implements MenuProvid
 
         if (cachedRecipe == null) {
             updateCachedRecipe();
+            return;
         }
 
         List<ItemStack> outputs = getActualOutputs(cachedRecipe.value());
 
         if (cachedRecipe != null && canInsertOutputs(outputs)) {
-            maxProgress = cachedRecipe.value().duration();
+            CropData cropData = CropData.fromItemStack(inputHandler.getResource(SEED_SLOT).toStack());
+
+            maxProgress = applySpeedModifier(cachedRecipe.value().duration(),cropData.speedModifier());
             progress++;
             if (progress >= maxProgress) craftItem();
         } else {
             progress = 0;
             sync();
         }
-    }
-
-    private int findOutputSlot(ItemStack output) {
-        for (int i = 0; i < outputHandler.size(); i++) {
-            ItemStack existing = outputHandler.getResource(i).toStack();
-
-            if (existing.isEmpty()) {
-                return i;
-            }
-
-            if (ItemStack.isSameItemSameComponents(existing, output)
-                    && existing.getCount() + output.getCount() <= existing.getMaxStackSize()) {
-                return i;
-            }
-        }
-        return -1;
     }
 
     private void craftItem() {
@@ -161,11 +150,18 @@ public class ClocheBlockEntity extends SyncableBlockEntity implements MenuProvid
             tx.commit();
         }
 
+        int mutationUpgradeCount = countUpgrade(ClocheItems.MUTATION_UPGRADE.get());
+        if (mutationUpgradeCount > 0) {
+            mutationEffect(mutationUpgradeCount);
+        }
+
         progress = 0;
         sync();
     }
 
     private List<ItemStack> getActualOutputs(ClocheRecipe recipe) {
+        if (level == null) return List.of();
+
         List<ItemStack> outputs = new ArrayList<>(recipe.rollResults(level.random));
 
         boolean hasNoSeedUpgrade = hasUpgrade(ClocheItems.NO_SEEDS_UPGRADE.get());
@@ -173,20 +169,36 @@ public class ClocheBlockEntity extends SyncableBlockEntity implements MenuProvid
         boolean hasNoOtherDropsUpgrade = hasUpgrade(ClocheItems.NO_OTHER_DROPS_UPGRADE.get());
         int mainOutputUpgradeCount = countUpgrade(ClocheItems.MAIN_OUTPUT_UPGRADE.get());
 
-        if (hasNoOtherDropsUpgrade) {
+        if (hasNoOtherDropsUpgrade && !outputs.isEmpty()) {
+            ItemStack main = recipe.getRollResults().getFirst().stack().copy();
             outputs.clear();
-            outputs.add(recipe.getRollResults().getFirst().stack().copy());
-            return outputs;
+            outputs.add(main);
         }
 
         if (hasNoSeedUpgrade) {
             Ingredient seed = recipe.seed();
-            outputs.removeIf(seed::test);
+            outputs.removeIf(seed);
         }
 
         if (mainOutputUpgradeCount > 0 && !outputs.isEmpty()) {
             ItemStack main = outputs.getFirst();
             main.setCount(main.getCount() * (1 << mainOutputUpgradeCount));
+        }
+
+        CropData cropData = CropData.fromItemStack(inputHandler.getResource(SEED_SLOT).toStack());
+        int outputMultiplier = cropData.outputMultiplier();
+
+        if (outputMultiplier > 0 && !outputs.isEmpty()) {
+            ItemStack main = outputs.getFirst();
+
+            int guaranteedMultiplier = 1 + (outputMultiplier / 100);
+            int remainderChance = outputMultiplier % 100;
+
+            main.setCount(main.getCount() * guaranteedMultiplier);
+
+            if (remainderChance > 0 && level.random.nextInt(100) < remainderChance) {
+                main.grow(main.getCount());
+            }
         }
 
         if (hasShearsUpgrade) {
@@ -196,9 +208,75 @@ public class ClocheBlockEntity extends SyncableBlockEntity implements MenuProvid
             }
         }
 
-        return outputs;
+        return mergeStacks(outputs);
     }
 
+    private List<ItemStack> mergeStacks(List<ItemStack> stacks) {
+        List<ItemStack> merged = new ArrayList<>();
+
+        for (ItemStack stack : stacks) {
+            boolean mergedExisting = false;
+
+            for (ItemStack existing : merged) {
+                if (ItemStack.isSameItemSameComponents(existing, stack)) {
+                    existing.grow(stack.getCount());
+                    mergedExisting = true;
+                    break;
+                }
+            }
+
+            if (!mergedExisting) {
+                merged.add(stack.copy());
+            }
+        }
+
+        return merged;
+    }
+
+    private void mutationEffect(int mutationUpgradeCount) {
+        if (level == null || mutationUpgradeCount <= 0) return;
+
+        int CHANCE_OF_MUTATION = 25; //Chance per upgrade as a percentage
+        if (level.random.nextInt(100) >= CHANCE_OF_MUTATION) return;
+
+        ItemStack original = inputHandler.getResource(SEED_SLOT).toStack();
+        if (original.isEmpty()) return;
+
+        ItemStack mutated = original.copy();
+        CropData cropData = CropData.fromItemStack(mutated);
+
+        int outputMultiplier = cropData.outputMultiplier();
+        int speedModifier = cropData.speedModifier();
+
+        // Randomly pick which stat to improve
+        if (level.random.nextBoolean()) {
+            outputMultiplier += 1;
+        } else {
+            speedModifier += 1;
+        }
+
+        // Cap at 100
+        outputMultiplier = Math.min(outputMultiplier, 100);
+        speedModifier = Math.min(speedModifier, 100);
+
+        mutated.set(ClocheDataComponent.CROP_DATA.get(), new CropData(outputMultiplier, speedModifier));
+
+        try (Transaction tx = Transaction.open(null)) {
+            inputHandler.extractInternal(SEED_SLOT, ItemResource.of(original), original.getCount(), tx);
+            inputHandler.insert(SEED_SLOT, ItemResource.of(mutated), mutated.getCount(), tx);
+            tx.commit();
+        }
+
+        setChanged();
+        sync();
+    }
+
+
+    private int applySpeedModifier(int baseDuration, int speedModifier) {
+        double multiplier = 1.0 - (speedModifier / 100.0);
+        multiplier = Math.max(multiplier, 0.05);
+        return (int) Math.ceil(baseDuration * multiplier);
+    }
 
     private boolean hasUpgrade(ItemLike upgrade) {
         ItemResource upgradeResource = ItemResource.of(upgrade);
@@ -315,5 +393,7 @@ public class ClocheBlockEntity extends SyncableBlockEntity implements MenuProvid
         dropInventoryContents(upgradeHandler);
         dropInventoryContents(outputHandler);
     }
+
+
 
 }

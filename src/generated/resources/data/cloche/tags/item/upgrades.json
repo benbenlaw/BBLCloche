@@ -3,6 +3,7 @@
     "cloche:no_seeds_upgrade",
     "cloche:no_other_drops_upgrade",
     "cloche:shears_upgrade",
-    "cloche:main_output_upgrade"
+    "cloche:main_output_upgrade",
+    "cloche:mutation_upgrade"
   ]
 }

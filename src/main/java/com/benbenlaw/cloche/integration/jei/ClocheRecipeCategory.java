@@ -37,12 +37,10 @@ import java.util.Map;
 public class ClocheRecipeCategory implements IRecipeCategory<ClocheRecipe> {
 
     public final static Identifier TEXTURE = Cloche.identifier("textures/gui/jei_cloche.png");
-    private final IDrawable background;
-
     public static final IRecipeType<ClocheRecipe> RECIPE_TYPE = IRecipeType.create(Cloche.MOD_ID, "cloche", ClocheRecipe.class);
 
+    private final IDrawable background;
     private final IDrawable icon;
-
 
     @Override
     public @Nullable Identifier getIdentifier(ClocheRecipe recipe) {

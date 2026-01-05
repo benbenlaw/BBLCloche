@@ -23,6 +23,9 @@ public class ClocheItems {
     public static final DeferredItem<Item> NO_OTHER_DROPS_UPGRADE = ITEMS.registerItem("no_other_drops_upgrade",
             properties -> new Item(new Item.Properties().setId(createID("no_other_drops_upgrade"))));
 
+    public static final DeferredItem<Item> MUTATION_UPGRADE = ITEMS.registerItem("mutation_upgrade",
+            properties -> new Item(new Item.Properties().setId(createID("mutation_upgrade"))));
+
 
 
     public static ResourceKey<Item> createID(String name) {
